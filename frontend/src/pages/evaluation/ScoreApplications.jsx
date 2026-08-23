@@ -1,0 +1,8 @@
+import { useEffect, useState } from "react";
+import api from "../../services/api.js";
+export default function ScoreApplications() {
+  const [rubric, setRubric] = useState([]); const [applicationId, setApplicationId] = useState(""); const [scores, setScores] = useState({}); const [notes, setNotes] = useState(""); const [message, setMessage] = useState("");
+  useEffect(() => { api.get("/evaluations/rubric").then((r) => setRubric(r.data.rubric.criteria)).catch((e) => setMessage(e.response?.data?.message || "Failed to load rubric.")); }, []);
+  async function submit(e) { e.preventDefault(); try { const payload = { scores: rubric.map((x) => ({ criterion: x.name, score: Number(scores[x.name]) })), notes }; const r = await api.post(`/evaluations/application/${applicationId}`, payload); setMessage(`Score saved: ${r.data.evaluation.totalScore}`); } catch (x) { setMessage(x.response?.data?.message || "Scoring failed."); } }
+  return <main className="max-w-xl p-4"><h1 className="text-xl font-semibold">Score Application</h1><form className="mt-3 space-y-3" onSubmit={submit}><label className="block">Application ID<input className="block w-full border p-2" value={applicationId} onChange={(e) => setApplicationId(e.target.value)} required /></label>{rubric.map((x) => <label className="block" key={x.name}>{x.name} ({x.weight}%)<input className="block w-full border p-2" type="number" min="0" max="10" required value={scores[x.name] ?? ""} onChange={(e) => setScores({ ...scores, [x.name]: e.target.value })} /></label>)}<label className="block">Notes<textarea className="block w-full border p-2" value={notes} onChange={(e) => setNotes(e.target.value)} /></label><button className="border px-3 py-2">Save score</button></form>{message && <p>{message}</p>}</main>;
+}

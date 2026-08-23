@@ -1,13 +1,36 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+import { fileURLToPath } from "node:url";
 import cors from "cors";
 import express from "express";
 import connectDB from "./config/db.js";
+import authRoutes from "./routes/authRoutes.js";
+import challengeRoutes from "./routes/challengeRoutes.js";
+import applicationRoutes from "./routes/applicationRoutes.js";
+import evaluationRoutes from "./routes/evaluationRoutes.js";
+import pilotRoutes from "./routes/pilotRoutes.js";
+import milestoneRoutes from "./routes/milestoneRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
+import kpiRoutes from "./routes/kpiRoutes.js";
+import templateRoutes from "./routes/templateRoutes.js";
+import path from "node:path";
+
+dotenv.config({ path: fileURLToPath(new URL("../../.env", import.meta.url)) });
 
 const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+app.use("/api/auth", authRoutes);
+app.use("/api/challenges", challengeRoutes);
+app.use("/api/applications", applicationRoutes);
+app.use("/api/evaluations", evaluationRoutes);
+app.use("/api/pilots", pilotRoutes);
+app.use("/api/milestones", milestoneRoutes);
+app.use("/api/payments", paymentRoutes);
+app.use("/api/kpis", kpiRoutes);
+app.use("/api/templates", templateRoutes);
+app.use("/uploads", express.static(path.resolve(process.cwd(), "../uploads")));
 
 app.get("/api/health", (req, res) => {
   res.status(200).json({ status: "ok" });
@@ -30,4 +53,3 @@ if (process.env.NODE_ENV !== "test") {
 }
 
 export default app;
-
