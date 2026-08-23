@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Start2Scale
 
 Start2Scale is a government-startup innovation procurement platform.
@@ -11,3 +12,6 @@ Start2Scale is a government-startup innovation procurement platform.
 
 The backend health check is available at `GET http://localhost:5000/api/health`.
 
+=======
+# start2scale
+>>>>>>> 8d32f07d065cd9dfc6093a2ed86f5f89ade7614a
