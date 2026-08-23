@@ -1,19 +1,22 @@
-import Anthropic from "@anthropic-ai/sdk";
-
 const askLLM = async (prompt) => {
-  if (!process.env.ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY is not configured");
+  if (!process.env.GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is not configured");
   try {
-    const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-    const response = await client.messages.create({
-      model: process.env.ANTHROPIC_MODEL || "claude-sonnet-4-20250514",
-      max_tokens: 2048,
-      messages: [{ role: "user", content: `${prompt}\nReturn valid JSON only, with no markdown fences or commentary.` }],
+    const model = process.env.GEMINI_MODEL || "gemini-3.7-flash";
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(process.env.GEMINI_API_KEY)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ role: "user", parts: [{ text: `${prompt}\nReturn valid JSON only, with no markdown fences or commentary.` }] }],
+        generationConfig: { responseMimeType: "application/json", maxOutputTokens: 2048 },
+      }),
     });
-    const text = response.content.find((item) => item.type === "text")?.text;
-    if (!text) throw new Error("Claude returned no text content");
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error?.message || `Gemini API returned HTTP ${response.status}`);
+    const text = data.candidates?.[0]?.content?.parts?.find((part) => typeof part.text === "string")?.text;
+    if (!text) throw new Error("Gemini returned no text content");
     return text;
   } catch (error) {
-    throw new Error(`Claude request failed: ${error.message}`);
+    throw new Error(`Gemini request failed: ${error.message}`);
   }
 };
 
@@ -52,4 +55,3 @@ export async function analyzeKPIProgress(pilot, kpiRecords) {
     return { overallStatus: result.overallStatus, summary: result.summary, flaggedKPIs: result.flaggedKPIs || [], recommendation: result.recommendation, authenticityFlags: result.authenticityFlags || [] };
   } catch (error) { throw new Error(`KPI analysis failed: ${error.message}`); }
 }
-
