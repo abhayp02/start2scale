@@ -1,3 +1,124 @@
-import{Link}from"react-router-dom";import{useAuth}from"../../context/AuthContext.jsx";import Card from"../../components/Card.jsx";
-const m=[['Active Challenges','12'],['Applications Received','382'],['AI Matches','1,240'],['Active Pilots','9'],['Procurement Pipeline','₹18.4 Cr'],['Solutions Scaled','18'],['Estimated Public Impact','2.4M']];
-export default function GovernmentDashboard(){const{user}=useAuth();return <main className="page"><header className="page-head"><div><p className="eyebrow">Government workspace</p><h1 className="page-title">Good Morning, {user.name||'Procurement Officer'}</h1><p className="subtitle">Here’s the latest across your innovation procurement portfolio.</p></div><Link className="btn btn-primary" to="/department/challenges/new">＋ Publish Challenge</Link></header><div className="metrics">{m.map(([a,b])=><div className="metric" key={a}><div className="metric-label">{a}</div><div className="metric-value">{b}</div><div className="delta"><span className="text-[#12b76a]">↑</span> updated this month</div></div>)}</div><div className="grid2"><div><section className="ai-panel"><p className="eyebrow !text-[#90b4ff]">✦ AI Matching Engine</p><h2>27 new solution matches ready for review</h2><p>234 verified startup profiles analyzed against Smart Waste Management.</p><div className="ai-stats"><div><strong>92%</strong><span>TOP MATCH</span></div><div><strong>27</strong><span>MATCHES</span></div><div><strong>6</strong><span>HIGH CONFIDENCE</span></div></div><Link className="btn btn-primary" to="/matching">Review AI matches →</Link></section><Card title="Innovation funnel" className="mt-5"><div className="lifecycle">{['48 Challenges','382 Applied','241 Eligible','76 Shortlisted','37 Pilots','26 Procured','18 Scaled'].map((x,i)=><div className={`life ${i<5?'done':''} ${i===5?'active':''}`} key={x}><div className="life-dot">{i<5?'✓':i+1}</div>{x}</div>)}</div></Card></div><div><Card title="Priority actions">{[['Evaluation pending','Smart Traffic Monitoring'],['Pilot KPI warning','Rural Telemedicine'],['Approval required','Water Quality Sensors'],['New AI recommendations','Smart Waste Management']].map(([a,b])=><div className="activity" key={a}><span className="dot"></span><div><b>{a}</b><p className="text-[#667085]">{b}</p></div></div>)}</Card><Card title="Recent activity" className="mt-5">{['Challenge Published · 23 Aug','AI Matches Generated · 24 Aug','Application Shortlisted · 25 Aug'].map(x=><div className="activity" key={x}><span className="dot"></span>{x}</div>)}</Card></div></div></main>}
+import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext.jsx";
+import Card from "../../components/Card.jsx";
+const m = [
+  ["Active Challenges", "12"],
+  ["Applications Received", "382"],
+  ["AI Matches", "1,240"],
+  ["Active Pilots", "9"],
+  ["Procurement Pipeline", "₹18.4 Cr"],
+  ["Solutions Scaled", "18"],
+  ["Estimated Public Impact", "2.4M"],
+];
+export default function GovernmentDashboard() {
+  const { user } = useAuth();
+  return (
+    <main className="page">
+      <header className="page-head">
+        <div>
+          <p className="eyebrow">Government workspace</p>
+          <h1 className="page-title">
+            Good Morning, {user.name || "Procurement Officer"}
+          </h1>
+          <p className="subtitle">
+            Here’s the latest across your innovation procurement portfolio.
+          </p>
+        </div>
+        <Link className="btn btn-primary" to="/department/challenges/new">
+          ＋ Publish Challenge
+        </Link>
+      </header>
+      <div className="metrics">
+        {m.map(([a, b]) => (
+          <div className="metric" key={a}>
+            <div className="metric-label">{a}</div>
+            <div className="metric-value">{b}</div>
+            <div className="delta">
+              <span className="text-[#12b76a]">↑</span> updated this month
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="grid2">
+        <div>
+          <section className="ai-panel">
+            <p className="eyebrow !text-[#90b4ff]">✦ AI Matching Engine</p>
+            <h2>27 new solution matches ready for review</h2>
+            <p>
+              234 verified startup profiles analyzed against Smart Waste
+              Management.
+            </p>
+            <div className="ai-stats">
+              <div>
+                <strong>92%</strong>
+                <span>TOP MATCH</span>
+              </div>
+              <div>
+                <strong>27</strong>
+                <span>MATCHES</span>
+              </div>
+              <div>
+                <strong>6</strong>
+                <span>HIGH CONFIDENCE</span>
+              </div>
+            </div>
+            <Link className="btn btn-primary" to="/matching">
+              Review AI matches →
+            </Link>
+          </section>
+          <Card title="Innovation funnel" className="mt-5">
+            <div className="lifecycle">
+              {[
+                "48 Challenges",
+                "382 Applied",
+                "241 Eligible",
+                "76 Shortlisted",
+                "37 Pilots",
+                "26 Procured",
+                "18 Scaled",
+              ].map((x, i) => (
+                <div
+                  className={`life ${i < 5 ? "done" : ""} ${i === 5 ? "active" : ""}`}
+                  key={x}
+                >
+                  <div className="life-dot">{i < 5 ? "✓" : i + 1}</div>
+                  {x}
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+        <div>
+          <Card title="Priority actions">
+            {[
+              ["Evaluation pending", "Smart Traffic Monitoring"],
+              ["Pilot KPI warning", "Rural Telemedicine"],
+              ["Approval required", "Water Quality Sensors"],
+              ["New AI recommendations", "Smart Waste Management"],
+            ].map(([a, b]) => (
+              <div className="activity" key={a}>
+                <span className="dot"></span>
+                <div>
+                  <b>{a}</b>
+                  <p className="text-[#667085]">{b}</p>
+                </div>
+              </div>
+            ))}
+          </Card>
+          <Card title="Recent activity" className="mt-5">
+            {[
+              "Challenge Published · 23 Aug",
+              "AI Matches Generated · 24 Aug",
+              "Application Shortlisted · 25 Aug",
+            ].map((x) => (
+              <div className="activity" key={x}>
+                <span className="dot"></span>
+                {x}
+              </div>
+            ))}
+          </Card>
+        </div>
+      </div>
+    </main>
+  );
+}

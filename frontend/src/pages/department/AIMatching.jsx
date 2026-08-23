@@ -1,2 +1,135 @@
-import{useEffect,useState}from"react";import{useSearchParams}from"react-router-dom";import api from"../../services/api.js";import Card from"../../components/Card.jsx";
-export default function AIMatching(){const[params,setParams]=useSearchParams();const[challenges,setChallenges]=useState([]);const[matches,setMatches]=useState([]);const[loading,setLoading]=useState(false);const[error,setError]=useState('');const id=params.get('challenge')||'';useEffect(()=>{api.get('/challenges/mine').then(r=>{setChallenges(r.data.challenges);if(!id&&r.data.challenges[0])setParams({challenge:r.data.challenges[0]._id},{replace:true})}).catch(e=>setError(e.response?.data?.message||'Failed to load challenges.'))},[]);useEffect(()=>{if(!id)return;setLoading(true);setError('');api.get(`/challenges/${id}/matches`).then(r=>setMatches(r.data.matches)).catch(e=>setError(e.response?.data?.message||'Matching failed.')).finally(()=>setLoading(false))},[id]);const challenge=challenges.find(c=>c._id===id);return <main className="page"><header className="page-head"><div><p className="eyebrow">AI Solution Matching</p><h1 className="page-title">Discover relevant startup solutions</h1><p className="subtitle">Gemini extracts requirements and ranks candidate startups. Recommendations inform—but never replace—procurement judgment.</p></div><select className="form-input max-w-sm" value={id} onChange={e=>setParams({challenge:e.target.value})}>{challenges.map(c=><option value={c._id} key={c._id}>{c.requirements?.domain||c.departmentName} · {c.status}</option>)}</select></header>{challenge&&<section className="ai-panel"><p className="eyebrow !text-[#90b4ff]">✦ Gemini matching engine</p><h2>{challenge.requirements?.domain||'Government challenge'}</h2><div className="mt-4 flex flex-wrap gap-2">{Object.entries(challenge.requirements||{}).filter(([,v])=>v).map(([k,v])=><span className="badge success" key={k}>✓ {k}: {v}</span>)}</div><div className="ai-stats"><div><strong>15</strong><span>STARTUPS ANALYZED</span></div><div><strong>{matches.length}</strong><span>RANKED MATCHES</span></div></div></section>}{loading&&<div className="card mt-5 text-center text-[#667085]">Analyzing startup capabilities with Gemini…</div>}{error&&<div className="card mt-5 text-[#b42318]">{error}</div>}<div className="grid2"> <section>{matches.map((m,i)=><article className="match" key={m.startupId}><div className="score">{Math.round(m.matchScore)}%</div><div><p className="eyebrow">Rank #{i+1}</p><h2 className="font-bold text-[#0b1f3a]">{m.startupName}</h2><p className="mt-2 text-sm leading-6 text-[#667085]">{m.explanation}</p><div className="progress mt-3"><span style={{width:`${Math.max(0,Math.min(100,m.matchScore))}%`}}></span></div></div><button className="btn btn-primary">Review</button></article>)}</section>{matches[0]&&<aside><Card title="Recommendation evidence"><p className="text-sm leading-6 text-[#475467]">{matches[0].explanation}</p><div className="mt-4 rounded-lg bg-[#fffaeb] p-3 text-xs text-[#b54708]">AI-generated recommendation. Validate certifications, deployments, pricing and integration evidence before shortlisting.</div></Card></aside>}</div>{!loading&&!error&&id&&!matches.length&&<div className="card mt-5 text-center text-[#667085]">No matches returned for this challenge.</div>}</main>}
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import api from "../../services/api.js";
+import Card from "../../components/Card.jsx";
+export default function AIMatching() {
+  const [params, setParams] = useSearchParams();
+  const [challenges, setChallenges] = useState([]);
+  const [matches, setMatches] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const id = params.get("challenge") || "";
+  useEffect(() => {
+    api
+      .get("/challenges/mine")
+      .then((r) => {
+        setChallenges(r.data.challenges);
+        if (!id && r.data.challenges[0])
+          setParams({ challenge: r.data.challenges[0]._id }, { replace: true });
+      })
+      .catch((e) =>
+        setError(e.response?.data?.message || "Failed to load challenges."),
+      );
+  }, []);
+  useEffect(() => {
+    if (!id) return;
+    setLoading(true);
+    setError("");
+    api
+      .get(`/challenges/${id}/matches`)
+      .then((r) => setMatches(r.data.matches))
+      .catch((e) => setError(e.response?.data?.message || "Matching failed."))
+      .finally(() => setLoading(false));
+  }, [id]);
+  const challenge = challenges.find((c) => c._id === id);
+  return (
+    <main className="page">
+      <header className="page-head">
+        <div>
+          <p className="eyebrow">AI Solution Matching</p>
+          <h1 className="page-title">Discover relevant startup solutions</h1>
+          <p className="subtitle">
+            Gemini extracts requirements and ranks candidate startups.
+            Recommendations inform—but never replace—procurement judgment.
+          </p>
+        </div>
+        <select
+          className="form-input max-w-sm"
+          value={id}
+          onChange={(e) => setParams({ challenge: e.target.value })}
+        >
+          {challenges.map((c) => (
+            <option value={c._id} key={c._id}>
+              {c.requirements?.domain || c.departmentName} · {c.status}
+            </option>
+          ))}
+        </select>
+      </header>
+      {challenge && (
+        <section className="ai-panel">
+          <p className="eyebrow !text-[#90b4ff]">✦ Gemini matching engine</p>
+          <h2>{challenge.requirements?.domain || "Government challenge"}</h2>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {Object.entries(challenge.requirements || {})
+              .filter(([, v]) => v)
+              .map(([k, v]) => (
+                <span className="badge success" key={k}>
+                  ✓ {k}: {v}
+                </span>
+              ))}
+          </div>
+          <div className="ai-stats">
+            <div>
+              <strong>15</strong>
+              <span>STARTUPS ANALYZED</span>
+            </div>
+            <div>
+              <strong>{matches.length}</strong>
+              <span>RANKED MATCHES</span>
+            </div>
+          </div>
+        </section>
+      )}
+      {loading && (
+        <div className="card mt-5 text-center text-[#667085]">
+          Analyzing startup capabilities with Gemini…
+        </div>
+      )}
+      {error && <div className="card mt-5 text-[#b42318]">{error}</div>}
+      <div className="grid2">
+        {" "}
+        <section>
+          {matches.map((m, i) => (
+            <article className="match" key={m.startupId}>
+              <div className="score">{Math.round(m.matchScore)}%</div>
+              <div>
+                <p className="eyebrow">Rank #{i + 1}</p>
+                <h2 className="font-bold text-[#0b1f3a]">{m.startupName}</h2>
+                <p className="mt-2 text-sm leading-6 text-[#667085]">
+                  {m.explanation}
+                </p>
+                <div className="progress mt-3">
+                  <span
+                    style={{
+                      width: `${Math.max(0, Math.min(100, m.matchScore))}%`,
+                    }}
+                  ></span>
+                </div>
+              </div>
+              <button className="btn btn-primary">Review</button>
+            </article>
+          ))}
+        </section>
+        {matches[0] && (
+          <aside>
+            <Card title="Recommendation evidence">
+              <p className="text-sm leading-6 text-[#475467]">
+                {matches[0].explanation}
+              </p>
+              <div className="mt-4 rounded-lg bg-[#fffaeb] p-3 text-xs text-[#b54708]">
+                AI-generated recommendation. Validate certifications,
+                deployments, pricing and integration evidence before
+                shortlisting.
+              </div>
+            </Card>
+          </aside>
+        )}
+      </div>
+      {!loading && !error && id && !matches.length && (
+        <div className="card mt-5 text-center text-[#667085]">
+          No matches returned for this challenge.
+        </div>
+      )}
+    </main>
+  );
+}

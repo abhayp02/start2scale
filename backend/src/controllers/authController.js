@@ -27,27 +27,42 @@ function createToken(user) {
 
 export async function register(req, res) {
   try {
-    const { name, email, password, role, departmentName, startupProfile } = req.body;
+    const { name, email, password, role, departmentName, startupProfile } =
+      req.body;
 
     if (!name || !email || !password || !role) {
-      return res.status(400).json({ message: "Name, email, password, and role are required" });
+      return res
+        .status(400)
+        .json({ message: "Name, email, password, and role are required" });
     }
-    if (!["government", "startup", "evaluator"].includes(role)) return res.status(403).json({ message: "This role cannot be self-registered" });
-    if (password.length < 8) return res.status(400).json({ message: "Password must be at least 8 characters" });
+    if (!["government", "startup", "evaluator"].includes(role))
+      return res
+        .status(403)
+        .json({ message: "This role cannot be self-registered" });
+    if (password.length < 8)
+      return res
+        .status(400)
+        .json({ message: "Password must be at least 8 characters" });
 
     if (role === "government" && !departmentName) {
-      return res.status(400).json({ message: "Department name is required for government users" });
+      return res
+        .status(400)
+        .json({ message: "Department name is required for government users" });
     }
 
     if (role === "startup" && !startupProfile) {
-      return res.status(400).json({ message: "Startup profile is required for startup users" });
+      return res
+        .status(400)
+        .json({ message: "Startup profile is required for startup users" });
     }
 
     const normalizedEmail = email.trim().toLowerCase();
     const existingUser = await User.findOne({ email: normalizedEmail });
 
     if (existingUser) {
-      return res.status(409).json({ message: "An account with this email already exists" });
+      return res
+        .status(409)
+        .json({ message: "An account with this email already exists" });
     }
 
     const passwordHash = await bcrypt.hash(password, 12);
@@ -60,7 +75,9 @@ export async function register(req, res) {
       startupProfile: role === "startup" ? startupProfile : undefined,
     });
 
-    return res.status(201).json({ token: createToken(user), user: publicUser(user) });
+    return res
+      .status(201)
+      .json({ token: createToken(user), user: publicUser(user) });
   } catch (error) {
     if (error.name === "ValidationError") {
       return res.status(400).json({ message: error.message });
@@ -75,17 +92,22 @@ export async function login(req, res) {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
     }
 
     const user = await User.findOne({ email: email.trim().toLowerCase() });
-    const passwordMatches = user && (await bcrypt.compare(password, user.passwordHash));
+    const passwordMatches =
+      user && (await bcrypt.compare(password, user.passwordHash));
 
     if (!passwordMatches) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    return res.status(200).json({ token: createToken(user), user: publicUser(user) });
+    return res
+      .status(200)
+      .json({ token: createToken(user), user: publicUser(user) });
   } catch (error) {
     return res.status(500).json({ message: "Unable to log in" });
   }

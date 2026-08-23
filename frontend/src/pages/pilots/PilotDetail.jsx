@@ -1,2 +1,102 @@
-import{useEffect,useState}from"react";import{Link,useParams}from"react-router-dom";import api from"../../services/api.js";import StatusBadge from"../../components/StatusBadge.jsx";
-export default function PilotDetail(){const{pilotId}=useParams();const[pilot,setPilot]=useState(null);const[error,setError]=useState('');useEffect(()=>{api.get(`/pilots/${pilotId}`).then(r=>setPilot(r.data.pilot)).catch(e=>setError(e.response?.data?.message||'Failed to load pilot.'))},[pilotId]);if(error)return <main className="page"><div className="card text-[#b42318]">{error}</div></main>;if(!pilot)return <main className="page"><div className="card text-center">Loading pilot…</div></main>;return <main className="page"><header className="page-head"><div><p className="eyebrow">Pilot delivery dashboard</p><h1 className="page-title">{pilot.challengeId?.requirements?.domain||'Innovation Pilot'}</h1><p className="subtitle">{pilot.startupId?.name} · {pilot.district||'Deployment location pending'}</p></div><StatusBadge status={pilot.status}/></header><div className="metrics">{[['Progress','78%'],['Duration',pilot.startDate?new Date(pilot.startDate).toLocaleDateString():'Not set'],['Sites','12 / 15'],['Users','4,280']].map(([a,b])=><div className="metric" key={a}><div className="metric-label">{a}</div><div className="metric-value">{b}</div></div>)}</div><div className="grid2"><section className="card"><h2 className="card-title">KPI performance</h2><div className="mt-4 grid grid-cols-2 gap-3">{pilot.kpis.map(k=><div className="rounded-lg bg-[#f8fafc] p-4" key={k._id}><small className="text-[#667085]">{k.name}</small><b className="mt-1 block text-xl text-[#138808]">{k.target} {k.unit}</b></div>)}</div>{!pilot.kpis.length&&<p className="mt-4 text-sm text-[#667085]">No KPIs configured.</p>}</section><section className="ai-panel"><p className="eyebrow !text-[#90b4ff]">Pilot success score</p><h2 className="!text-4xl">91 / 100</h2><p>Strong technical and citizen-impact performance indicates readiness for scale review.</p><span className="badge success mt-4">✓ Scale Recommended</span></section></div><div className="mt-5 flex gap-3"><Link className="btn btn-primary" to={`/pilots/${pilotId}/milestones`}>Track milestones</Link><Link className="btn btn-secondary" to={`/pilots/${pilotId}/kpis`}>Submit KPI update</Link><Link className="btn btn-secondary" to="/analytics">Generate impact report</Link></div></main>}
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import api from "../../services/api.js";
+import StatusBadge from "../../components/StatusBadge.jsx";
+export default function PilotDetail() {
+  const { pilotId } = useParams();
+  const [pilot, setPilot] = useState(null);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    api
+      .get(`/pilots/${pilotId}`)
+      .then((r) => setPilot(r.data.pilot))
+      .catch((e) =>
+        setError(e.response?.data?.message || "Failed to load pilot."),
+      );
+  }, [pilotId]);
+  if (error)
+    return (
+      <main className="page">
+        <div className="card text-[#b42318]">{error}</div>
+      </main>
+    );
+  if (!pilot)
+    return (
+      <main className="page">
+        <div className="card text-center">Loading pilot…</div>
+      </main>
+    );
+  return (
+    <main className="page">
+      <header className="page-head">
+        <div>
+          <p className="eyebrow">Pilot delivery dashboard</p>
+          <h1 className="page-title">
+            {pilot.challengeId?.requirements?.domain || "Innovation Pilot"}
+          </h1>
+          <p className="subtitle">
+            {pilot.startupId?.name} ·{" "}
+            {pilot.district || "Deployment location pending"}
+          </p>
+        </div>
+        <StatusBadge status={pilot.status} />
+      </header>
+      <div className="metrics">
+        {[
+          ["Progress", "78%"],
+          [
+            "Duration",
+            pilot.startDate
+              ? new Date(pilot.startDate).toLocaleDateString()
+              : "Not set",
+          ],
+          ["Sites", "12 / 15"],
+          ["Users", "4,280"],
+        ].map(([a, b]) => (
+          <div className="metric" key={a}>
+            <div className="metric-label">{a}</div>
+            <div className="metric-value">{b}</div>
+          </div>
+        ))}
+      </div>
+      <div className="grid2">
+        <section className="card">
+          <h2 className="card-title">KPI performance</h2>
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            {pilot.kpis.map((k) => (
+              <div className="rounded-lg bg-[#f8fafc] p-4" key={k._id}>
+                <small className="text-[#667085]">{k.name}</small>
+                <b className="mt-1 block text-xl text-[#138808]">
+                  {k.target} {k.unit}
+                </b>
+              </div>
+            ))}
+          </div>
+          {!pilot.kpis.length && (
+            <p className="mt-4 text-sm text-[#667085]">No KPIs configured.</p>
+          )}
+        </section>
+        <section className="ai-panel">
+          <p className="eyebrow !text-[#90b4ff]">Pilot success score</p>
+          <h2 className="!text-4xl">91 / 100</h2>
+          <p>
+            Strong technical and citizen-impact performance indicates readiness
+            for scale review.
+          </p>
+          <span className="badge success mt-4">✓ Scale Recommended</span>
+        </section>
+      </div>
+      <div className="mt-5 flex gap-3">
+        <Link className="btn btn-primary" to={`/pilots/${pilotId}/milestones`}>
+          Track milestones
+        </Link>
+        <Link className="btn btn-secondary" to={`/pilots/${pilotId}/kpis`}>
+          Submit KPI update
+        </Link>
+        <Link className="btn btn-secondary" to="/analytics">
+          Generate impact report
+        </Link>
+      </div>
+    </main>
+  );
+}

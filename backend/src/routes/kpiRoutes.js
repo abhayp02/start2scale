@@ -1,4 +1,26 @@
-import { Router } from "express"; import multer from "multer"; import path from "node:path"; import { addKPIRecord, listKPIRecords, verifyKPIRecord } from "../controllers/kpiController.js"; import { authenticate, authorizeRoles } from "../middleware/auth.js";
-const upload = multer({ storage: multer.diskStorage({ destination: path.resolve(process.cwd(), "../uploads"), filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname.replace(/[^a-zA-Z0-9._-]/g, "_")}`) }), limits: { fileSize: 10 * 1024 * 1024 } });
-const router = Router(); router.use(authenticate); router.get("/pilot/:pilotId", listKPIRecords); router.post("/pilot/:pilotId", upload.single("evidence"), addKPIRecord); router.patch("/:id/verify", authorizeRoles("evaluator"), verifyKPIRecord); export default router;
-
+import { Router } from "express";
+import multer from "multer";
+import path from "node:path";
+import {
+  addKPIRecord,
+  listKPIRecords,
+  verifyKPIRecord,
+} from "../controllers/kpiController.js";
+import { authenticate, authorizeRoles } from "../middleware/auth.js";
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: path.resolve(process.cwd(), "../uploads"),
+    filename: (req, file, cb) =>
+      cb(
+        null,
+        `${Date.now()}-${file.originalname.replace(/[^a-zA-Z0-9._-]/g, "_")}`,
+      ),
+  }),
+  limits: { fileSize: 10 * 1024 * 1024 },
+});
+const router = Router();
+router.use(authenticate);
+router.get("/pilot/:pilotId", listKPIRecords);
+router.post("/pilot/:pilotId", upload.single("evidence"), addKPIRecord);
+router.patch("/:id/verify", authorizeRoles("evaluator"), verifyKPIRecord);
+export default router;

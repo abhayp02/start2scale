@@ -1,2 +1,108 @@
-import{useEffect,useState}from"react";import{Link}from"react-router-dom";import api from"../../services/api.js";import StatusBadge from"../../components/StatusBadge.jsx";
-export default function MyChallenges(){const[items,setItems]=useState([]);const[error,setError]=useState('');const load=()=>api.get('/challenges/mine').then(r=>setItems(r.data.challenges)).catch(e=>setError(e.response?.data?.message||'Failed to load challenges.'));useEffect(load,[]);async function status(id,value){try{await api.patch(`/challenges/${id}/status`,{status:value});load()}catch(e){setError(e.response?.data?.message||'Update failed.')}}return <main className="page"><header className="page-head"><div><p className="eyebrow">Challenge management</p><h1 className="page-title">Government challenges</h1><p className="subtitle">Publish, monitor and discover startup solutions for your department’s priority problems.</p></div><Link className="btn btn-primary" to="/department/challenges/new">＋ New Challenge</Link></header>{error&&<div className="card text-[#b42318]">{error}</div>}<div className="space-y-4">{items.map(c=><article className="card" key={c._id}><div className="flex flex-wrap items-start justify-between gap-4"><div><StatusBadge status={c.status}/><h2 className="mt-3 text-lg font-bold text-[#0b1f3a]">{c.requirements?.domain||'Innovation Challenge'}</h2><p className="mt-1 text-xs text-[#667085]">Created {new Date(c.createdAt).toLocaleDateString()}</p></div><div className="flex gap-2">{c.status==='draft'&&<button className="btn btn-primary" onClick={()=>status(c._id,'published')}>Publish</button>}{c.status==='published'&&<><Link className="btn btn-primary" to={`/matching?challenge=${c._id}`}>View AI Matches</Link><button className="btn btn-secondary" onClick={()=>status(c._id,'closed')}>Close</button></>}</div></div><p className="mt-4 line-clamp-3 whitespace-pre-line text-sm leading-6 text-[#475467]">{c.problemText}</p><div className="mt-4 flex flex-wrap gap-2">{Object.values(c.requirements||{}).filter(Boolean).map(x=><span className="badge" key={x}>{x}</span>)}</div></article>)}</div>{!error&&!items.length&&<div className="card text-center"><p className="text-[#667085]">No challenges yet.</p><Link className="btn btn-primary mt-4" to="/department/challenges/new">Create your first challenge</Link></div>}</main>}
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import api from "../../services/api.js";
+import StatusBadge from "../../components/StatusBadge.jsx";
+export default function MyChallenges() {
+  const [items, setItems] = useState([]);
+  const [error, setError] = useState("");
+  const load = () =>
+    api
+      .get("/challenges/mine")
+      .then((r) => setItems(r.data.challenges))
+      .catch((e) =>
+        setError(e.response?.data?.message || "Failed to load challenges."),
+      );
+  useEffect(load, []);
+  async function status(id, value) {
+    try {
+      await api.patch(`/challenges/${id}/status`, { status: value });
+      load();
+    } catch (e) {
+      setError(e.response?.data?.message || "Update failed.");
+    }
+  }
+  return (
+    <main className="page">
+      <header className="page-head">
+        <div>
+          <p className="eyebrow">Challenge management</p>
+          <h1 className="page-title">Government challenges</h1>
+          <p className="subtitle">
+            Publish, monitor and discover startup solutions for your
+            department’s priority problems.
+          </p>
+        </div>
+        <Link className="btn btn-primary" to="/department/challenges/new">
+          ＋ New Challenge
+        </Link>
+      </header>
+      {error && <div className="card text-[#b42318]">{error}</div>}
+      <div className="space-y-4">
+        {items.map((c) => (
+          <article className="card" key={c._id}>
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <StatusBadge status={c.status} />
+                <h2 className="mt-3 text-lg font-bold text-[#0b1f3a]">
+                  {c.requirements?.domain || "Innovation Challenge"}
+                </h2>
+                <p className="mt-1 text-xs text-[#667085]">
+                  Created {new Date(c.createdAt).toLocaleDateString()}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                {c.status === "draft" && (
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => status(c._id, "published")}
+                  >
+                    Publish
+                  </button>
+                )}
+                {c.status === "published" && (
+                  <>
+                    <Link
+                      className="btn btn-primary"
+                      to={`/matching?challenge=${c._id}`}
+                    >
+                      View AI Matches
+                    </Link>
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => status(c._id, "closed")}
+                    >
+                      Close
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+            <p className="mt-4 line-clamp-3 whitespace-pre-line text-sm leading-6 text-[#475467]">
+              {c.problemText}
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {Object.values(c.requirements || {})
+                .filter(Boolean)
+                .map((x) => (
+                  <span className="badge" key={x}>
+                    {x}
+                  </span>
+                ))}
+            </div>
+          </article>
+        ))}
+      </div>
+      {!error && !items.length && (
+        <div className="card text-center">
+          <p className="text-[#667085]">No challenges yet.</p>
+          <Link
+            className="btn btn-primary mt-4"
+            to="/department/challenges/new"
+          >
+            Create your first challenge
+          </Link>
+        </div>
+      )}
+    </main>
+  );
+}

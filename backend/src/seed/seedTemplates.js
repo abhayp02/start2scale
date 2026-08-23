@@ -3,13 +3,24 @@ import { fileURLToPath } from "node:url";
 import mongoose from "mongoose";
 import Template from "../models/Template.js";
 
-dotenv.config({ path: fileURLToPath(new URL("../../../.env", import.meta.url)) });
+dotenv.config({
+  path: fileURLToPath(new URL("../../../.env", import.meta.url)),
+});
 
 const templates = [
   {
     type: "problem-statement",
     title: "Standard Problem Statement Format",
-    fields: ["departmentName", "sector", "problemDescription", "outcomeGoal", "kpiList", "pilotScope", "pilotDuration", "maxBudget"],
+    fields: [
+      "departmentName",
+      "sector",
+      "problemDescription",
+      "outcomeGoal",
+      "kpiList",
+      "pilotScope",
+      "pilotDuration",
+      "maxBudget",
+    ],
     content: `
 Department: {{departmentName}}
 Sector: {{sector}}
@@ -32,23 +43,33 @@ Budget Ceiling: {{maxBudget}}
     type: "evaluation-rubric",
     title: "Standard Evaluation Rubric",
     fields: [],
-    content: JSON.stringify({
-      criteria: [
-        { name: "Technical Fit", weight: 30 },
-        { name: "Domain Experience", weight: 20 },
-        { name: "Team Capability", weight: 15 },
-        { name: "Cost Reasonableness", weight: 15 },
-        { name: "Data Security Plan", weight: 10 },
-        { name: "Scalability Plan", weight: 10 },
-      ],
-      scoringScale: "0-10 per criterion, evaluator-assigned",
-      totalScoreFormula: "sum(criterion.score * criterion.weight / 10)",
-    }, null, 2),
+    content: JSON.stringify(
+      {
+        criteria: [
+          { name: "Technical Fit", weight: 30 },
+          { name: "Domain Experience", weight: 20 },
+          { name: "Team Capability", weight: 15 },
+          { name: "Cost Reasonableness", weight: 15 },
+          { name: "Data Security Plan", weight: 10 },
+          { name: "Scalability Plan", weight: 10 },
+        ],
+        scoringScale: "0-10 per criterion, evaluator-assigned",
+        totalScoreFormula: "sum(criterion.score * criterion.weight / 10)",
+      },
+      null,
+      2,
+    ),
   },
   {
     type: "pilot-agreement",
     title: "Standard Pilot Agreement",
-    fields: ["departmentName", "startupName", "pilotScope", "pilotDuration", "milestoneSummary"],
+    fields: [
+      "departmentName",
+      "startupName",
+      "pilotScope",
+      "pilotDuration",
+      "milestoneSummary",
+    ],
     content: `
 PILOT AGREEMENT
 
@@ -118,42 +139,82 @@ confirmation of deletion.
     type: "cybersecurity-checklist",
     title: "Standard Cybersecurity Checklist",
     fields: [],
-    content: JSON.stringify({
-      checklist: [
-        { item: "Data encrypted at rest and in transit", requiresProof: true },
-        { item: "Role-based access control implemented", requiresProof: true },
-        { item: "No citizen data stored outside India (data localization)", requiresProof: true },
-        { item: "Vulnerability assessment completed before go-live", requiresProof: true },
-        { item: "Incident response contact designated", requiresProof: false },
-      ],
-    }, null, 2),
+    content: JSON.stringify(
+      {
+        checklist: [
+          {
+            item: "Data encrypted at rest and in transit",
+            requiresProof: true,
+          },
+          {
+            item: "Role-based access control implemented",
+            requiresProof: true,
+          },
+          {
+            item: "No citizen data stored outside India (data localization)",
+            requiresProof: true,
+          },
+          {
+            item: "Vulnerability assessment completed before go-live",
+            requiresProof: true,
+          },
+          {
+            item: "Incident response contact designated",
+            requiresProof: false,
+          },
+        ],
+      },
+      null,
+      2,
+    ),
   },
   {
     type: "risk-register",
     title: "Standard Risk Register",
     fields: ["pilotName"],
-    content: JSON.stringify({
-      pilotNamePlaceholder: "{{pilotName}}",
-      risks: [
-        { category: "Technical", risk: "Accuracy below target", mitigation: "" },
-        { category: "Financial", risk: "Cost overrun at scale", mitigation: "" },
-        { category: "Data", risk: "Citizen data breach", mitigation: "" },
-        { category: "Adoption", risk: "Low rural/end-user uptake", mitigation: "" },
-      ],
-    }, null, 2),
+    content: JSON.stringify(
+      {
+        pilotNamePlaceholder: "{{pilotName}}",
+        risks: [
+          {
+            category: "Technical",
+            risk: "Accuracy below target",
+            mitigation: "",
+          },
+          {
+            category: "Financial",
+            risk: "Cost overrun at scale",
+            mitigation: "",
+          },
+          { category: "Data", risk: "Citizen data breach", mitigation: "" },
+          {
+            category: "Adoption",
+            risk: "Low rural/end-user uptake",
+            mitigation: "",
+          },
+        ],
+      },
+      null,
+      2,
+    ),
   },
 ];
 
 export default async function seedTemplates() {
   for (const template of templates) {
-    await Template.findOneAndUpdate({ type: template.type }, template, { upsert: true, new: true });
+    await Template.findOneAndUpdate({ type: template.type }, template, {
+      upsert: true,
+      new: true,
+    });
   }
   console.log(`Seeded ${templates.length} templates.`);
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
-  if (!process.env.MONGODB_URI) throw new Error("MONGODB_URI is not configured");
-  mongoose.connect(process.env.MONGODB_URI)
+  if (!process.env.MONGODB_URI)
+    throw new Error("MONGODB_URI is not configured");
+  mongoose
+    .connect(process.env.MONGODB_URI)
     .then(seedTemplates)
     .then(() => mongoose.disconnect())
     .catch((error) => {

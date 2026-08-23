@@ -20,4 +20,3 @@ const templateSchema = new mongoose.Schema({
 });
 
 export default mongoose.model("Template", templateSchema);
-

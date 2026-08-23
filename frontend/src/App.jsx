@@ -27,7 +27,11 @@ import TemplateLibrary from "./pages/templates/TemplateLibrary.jsx";
 
 function AccountHome() {
   const { user } = useAuth();
-  return user.role === "startup" ? <StartupDashboard /> : <GovernmentDashboard />;
+  return user.role === "startup" ? (
+    <StartupDashboard />
+  ) : (
+    <GovernmentDashboard />
+  );
 }
 
 export default function App() {
@@ -39,7 +43,10 @@ export default function App() {
           <Route path="/welcome" element={<Navigate to="/" replace />} />
           <Route path="/explore" element={<BrowseChallenges publicView />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/government/login" element={<Login portal="government" />} />
+          <Route
+            path="/government/login"
+            element={<Login portal="government" />}
+          />
           <Route path="/startup/login" element={<Login portal="startup" />} />
           <Route path="/register" element={<Register />} />
 
@@ -50,36 +57,90 @@ export default function App() {
               <Route path="/recommendations" element={<BrowseChallenges />} />
               <Route path="/pilots" element={<PilotList />} />
               <Route path="/pilots/:pilotId" element={<PilotDetail />} />
-              <Route path="/pilots/:pilotId/milestones" element={<MilestoneTracker />} />
+              <Route
+                path="/pilots/:pilotId/milestones"
+                element={<MilestoneTracker />}
+              />
               <Route path="/pilots/:pilotId/kpis" element={<KPIUpdate />} />
               <Route path="/templates" element={<TemplateLibrary />} />
               <Route path="/analytics" element={<AnalyticsDashboard />} />
-              <Route path="/scale-up" element={<OperationalPage title="Scale-Up" />} />
-              <Route path="/reports" element={<OperationalPage title="Reports" />} />
-              <Route path="/audit" element={<OperationalPage title="Audit Trail" />} />
-              <Route path="/notifications" element={<OperationalPage title="Notifications" />} />
-              <Route path="/settings" element={<OperationalPage title="Settings" />} />
-              <Route path="/company-profile" element={<OperationalPage title="Company Profile" />} />
-              <Route path="/documents" element={<OperationalPage title="Documents" />} />
-              <Route path="/payments-status" element={<OperationalPage title="Payments" />} />
-              <Route path="/evaluation-status" element={<OperationalPage title="Evaluations" />} />
+              <Route
+                path="/scale-up"
+                element={<OperationalPage title="Scale-Up" />}
+              />
+              <Route
+                path="/reports"
+                element={<OperationalPage title="Reports" />}
+              />
+              <Route
+                path="/audit"
+                element={<OperationalPage title="Audit Trail" />}
+              />
+              <Route
+                path="/notifications"
+                element={<OperationalPage title="Notifications" />}
+              />
+              <Route
+                path="/settings"
+                element={<OperationalPage title="Settings" />}
+              />
+              <Route
+                path="/company-profile"
+                element={<OperationalPage title="Company Profile" />}
+              />
+              <Route
+                path="/documents"
+                element={<OperationalPage title="Documents" />}
+              />
+              <Route
+                path="/payments-status"
+                element={<OperationalPage title="Payments" />}
+              />
+              <Route
+                path="/evaluation-status"
+                element={<OperationalPage title="Evaluations" />}
+              />
 
               <Route element={<ProtectedRoute allowedRoles={["government"]} />}>
-                <Route path="/department/challenges/new" element={<CreateChallenge />} />
-                <Route path="/department/challenges" element={<MyChallenges />} />
+                <Route
+                  path="/department/challenges/new"
+                  element={<CreateChallenge />}
+                />
+                <Route
+                  path="/department/challenges"
+                  element={<MyChallenges />}
+                />
                 <Route path="/payments" element={<PaymentsDue />} />
-                <Route path="/contracts/generate" element={<GenerateContract />} />
+                <Route
+                  path="/contracts/generate"
+                  element={<GenerateContract />}
+                />
               </Route>
               <Route element={<ProtectedRoute allowedRoles={["startup"]} />}>
                 <Route path="/challenges" element={<BrowseChallenges />} />
-                <Route path="/challenges/:challengeId/apply" element={<Apply />} />
+                <Route
+                  path="/challenges/:challengeId/apply"
+                  element={<Apply />}
+                />
                 <Route path="/applications" element={<MyApplications />} />
               </Route>
-              <Route element={<ProtectedRoute allowedRoles={["government", "evaluator", "admin"]} />}>
-                <Route path="/evaluation/eligibility" element={<EligibilityCheck />} />
+              <Route
+                element={
+                  <ProtectedRoute
+                    allowedRoles={["government", "evaluator", "admin"]}
+                  />
+                }
+              >
+                <Route
+                  path="/evaluation/eligibility"
+                  element={<EligibilityCheck />}
+                />
               </Route>
               <Route element={<ProtectedRoute allowedRoles={["evaluator"]} />}>
-                <Route path="/evaluation/score" element={<ScoreApplications />} />
+                <Route
+                  path="/evaluation/score"
+                  element={<ScoreApplications />}
+                />
               </Route>
             </Route>
           </Route>

@@ -24,7 +24,10 @@ export async function authenticate(req, res, next) {
     req.user = user;
     next();
   } catch (error) {
-    if (error.name === "JsonWebTokenError" || error.name === "TokenExpiredError") {
+    if (
+      error.name === "JsonWebTokenError" ||
+      error.name === "TokenExpiredError"
+    ) {
       return res.status(401).json({ message: "Invalid or expired token" });
     }
 
@@ -35,10 +38,13 @@ export async function authenticate(req, res, next) {
 export function authorizeRoles(...roles) {
   return (req, res, next) => {
     if (!req.user || !roles.includes(req.user.role)) {
-      return res.status(403).json({ message: "You do not have permission to access this resource" });
+      return res
+        .status(403)
+        .json({
+          message: "You do not have permission to access this resource",
+        });
     }
 
     next();
   };
 }
-

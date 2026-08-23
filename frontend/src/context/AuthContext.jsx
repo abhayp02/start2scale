@@ -4,10 +4,17 @@ const AuthContext = createContext(null);
 const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(() => localStorage.getItem("start2scale_token"));
+  const [token, setToken] = useState(() =>
+    localStorage.getItem("start2scale_token"),
+  );
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("start2scale_user");
-    try { return storedUser ? JSON.parse(storedUser) : null; } catch { localStorage.removeItem("start2scale_user"); return null; }
+    try {
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch {
+      localStorage.removeItem("start2scale_user");
+      return null;
+    }
   });
   const [loading, setLoading] = useState(Boolean(token));
 
