@@ -10,7 +10,8 @@ async function request(path, options = {}) {
       ...options.headers,
     },
   });
-  const data = await response.json();
+  const contentType = response.headers.get("content-type") || "";
+  const data = contentType.includes("application/json") ? await response.json() : { message: await response.text() || "Request failed" };
   if (!response.ok) {
     const error = new Error(data.message || "Request failed");
     error.response = { status: response.status, data };

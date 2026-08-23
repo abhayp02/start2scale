@@ -34,7 +34,7 @@ export async function createChallenge(req, res) {
 
     return res.status(201).json({ challenge });
   } catch (error) {
-    return res.status(500).json({ message: "Failed to create challenge" });
+    return res.status(502).json({ message: error.message || "Failed to create challenge" });
   }
 }
 

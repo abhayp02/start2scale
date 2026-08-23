@@ -4,8 +4,8 @@ import { authenticate, authorizeRoles } from "../middleware/auth.js";
 
 const router = Router();
 
+router.get("/", browseChallenges);
 router.use(authenticate);
-router.get("/", authorizeRoles("startup", "evaluator", "admin"), browseChallenges);
 router.get("/mine", authorizeRoles("government"), getMyChallenges);
 router.post("/", authorizeRoles("government"), createChallenge);
 router.get("/:id/matches", authorizeRoles("government"), getStartupMatches);

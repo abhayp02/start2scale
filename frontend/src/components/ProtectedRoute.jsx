@@ -7,9 +7,8 @@ export default function ProtectedRoute({ allowedRoles }) {
   if (loading) return <p className="p-4">Loading...</p>;
   if (!user) return <Navigate to="/login" replace />;
   if (allowedRoles && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <Outlet />;
 }
-

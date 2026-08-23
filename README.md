@@ -146,7 +146,7 @@ Each operation makes one Gemini request and expects structured JSON output. Offi
 ## Current implementation notes
 
 - Authentication, challenges, applications, eligibility, evaluation, pilots, milestones, payments, KPI records, uploads, templates and Gemini endpoints are API-backed.
-- The polished AI matching showcase currently demonstrates ranked recommendation presentation; connect it to `/api/challenges/:id/matches` for challenge-specific live results.
+- AI Solution Matching loads department challenges and calls `/api/challenges/:id/matches` for live Gemini-ranked startup recommendations.
 - Some enterprise navigation views are designed operational showcases pending dedicated backend modules.
 - Uploaded files are stored locally in `uploads/`; production deployment should use durable object storage.
 - No automated test suite or production deployment configuration is included.

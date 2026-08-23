@@ -32,6 +32,8 @@ export async function register(req, res) {
     if (!name || !email || !password || !role) {
       return res.status(400).json({ message: "Name, email, password, and role are required" });
     }
+    if (!["government", "startup", "evaluator"].includes(role)) return res.status(403).json({ message: "This role cannot be self-registered" });
+    if (password.length < 8) return res.status(400).json({ message: "Password must be at least 8 characters" });
 
     if (role === "government" && !departmentName) {
       return res.status(400).json({ message: "Department name is required for government users" });
@@ -92,4 +94,3 @@ export async function login(req, res) {
 export async function getCurrentUser(req, res) {
   return res.status(200).json({ user: publicUser(req.user) });
 }
-

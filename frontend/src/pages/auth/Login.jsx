@@ -9,7 +9,7 @@ export default function Login({ portal = "government" }) {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  if (user) return <Navigate to="/" replace />;
+  if (user) return <Navigate to="/dashboard" replace />;
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -19,7 +19,7 @@ export default function Login({ portal = "government" }) {
       const loggedInUser = await login(form);
       if (portal === "startup" && loggedInUser.role !== "startup") { logout(); throw new Error("Please use the government portal for this account."); }
       if (portal === "government" && loggedInUser.role === "startup") { logout(); throw new Error("Please use the startup portal for this account."); }
-      navigate("/");
+      navigate("/dashboard");
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -40,6 +40,6 @@ export default function Login({ portal = "government" }) {
         {error && <p className="mt-4 rounded-lg bg-[#fef3f2] p-3 text-xs text-[#b42318]" role="alert">{error}</p>}
         <button className="btn btn-primary mt-5 w-full !py-3" type="submit" disabled={submitting}>{submitting ? "Signing in..." : "Sign in securely →"}</button>
       </form>
-      <p className="mt-6 text-center text-xs text-[#667085]">No account? <Link className="font-semibold text-[#155eef]" to={`/register?role=${portal === "startup" ? "startup" : "government"}`}>Register</Link></p><Link to="/welcome" className="mt-5 block text-center text-xs text-[#667085]">← Back to homepage</Link></div></section></main>
+      <p className="mt-6 text-center text-xs text-[#667085]">No account? <Link className="font-semibold text-[#155eef]" to={`/register?role=${portal === "startup" ? "startup" : "government"}`}>Register</Link></p><Link to="/" className="mt-5 block text-center text-xs text-[#667085]">← Back to homepage</Link></div></section></main>
   );
 }

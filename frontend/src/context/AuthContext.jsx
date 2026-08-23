@@ -7,7 +7,7 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem("start2scale_token"));
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("start2scale_user");
-    return storedUser ? JSON.parse(storedUser) : null;
+    try { return storedUser ? JSON.parse(storedUser) : null; } catch { localStorage.removeItem("start2scale_user"); return null; }
   });
   const [loading, setLoading] = useState(Boolean(token));
 
@@ -82,4 +82,3 @@ export function useAuth() {
   if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
 }
-

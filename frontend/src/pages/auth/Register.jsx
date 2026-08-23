@@ -15,7 +15,7 @@ export default function Register() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  if (user) return <Navigate to="/" replace />;
+  if (user) return <Navigate to="/dashboard" replace />;
 
   function updateField(event) {
     const { name, value, type, checked } = event.target;
@@ -42,7 +42,7 @@ export default function Register() {
     }
     try {
       await register(details);
-      navigate("/");
+      navigate("/dashboard");
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -79,4 +79,3 @@ export default function Register() {
     </main>
   );
 }
-
