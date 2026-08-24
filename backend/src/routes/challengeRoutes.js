@@ -19,6 +19,7 @@ router.get(
   recommendedChallenges,
 );
 router.get("/mine", authorizeRoles("government"), getMyChallenges);
+router.get("/my", authorizeRoles("government"), getMyChallenges);
 router.post("/", authorizeRoles("government"), createChallenge);
 router.get("/:id/matches", authorizeRoles("government"), getStartupMatches);
 router.patch(
