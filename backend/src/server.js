@@ -15,10 +15,17 @@ import templateRoutes from "./routes/templateRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import path from "node:path";
 
+import fs from "node:fs";
+
 dotenv.config({ path: fileURLToPath(new URL("../../.env", import.meta.url)) });
 
 const app = express();
 const port = process.env.PORT || 5000;
+
+const uploadsDir = fileURLToPath(new URL("../../uploads", import.meta.url));
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
 app.use(cors());
 app.use(express.json());
@@ -31,8 +38,12 @@ app.use("/api/milestones", milestoneRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/kpis", kpiRoutes);
 app.use("/api/templates", templateRoutes);
+<<<<<<< Updated upstream
 app.use("/api/admin", adminRoutes);
 app.use("/uploads", express.static(path.resolve(process.cwd(), "../uploads")));
+=======
+app.use("/uploads", express.static(uploadsDir));
+>>>>>>> Stashed changes
 
 app.get("/api/health", (req, res) => {
   res.status(200).json({ status: "ok" });

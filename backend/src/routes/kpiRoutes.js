@@ -1,15 +1,22 @@
 import { Router } from "express";
 import multer from "multer";
-import path from "node:path";
+import fs from "node:fs";
+import { fileURLToPath } from "node:url";
 import {
   addKPIRecord,
   listKPIRecords,
   verifyKPIRecord,
 } from "../controllers/kpiController.js";
 import { authenticate, authorizeRoles } from "../middleware/auth.js";
+
+const uploadsDir = fileURLToPath(new URL("../../../uploads", import.meta.url));
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
 const upload = multer({
   storage: multer.diskStorage({
-    destination: path.resolve(process.cwd(), "../uploads"),
+    destination: uploadsDir,
     filename: (req, file, cb) =>
       cb(
         null,
