@@ -38,12 +38,8 @@ app.use("/api/milestones", milestoneRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/kpis", kpiRoutes);
 app.use("/api/templates", templateRoutes);
-<<<<<<< Updated upstream
 app.use("/api/admin", adminRoutes);
-app.use("/uploads", express.static(path.resolve(process.cwd(), "../uploads")));
-=======
 app.use("/uploads", express.static(uploadsDir));
->>>>>>> Stashed changes
 
 app.get("/api/health", (req, res) => {
   res.status(200).json({ status: "ok" });

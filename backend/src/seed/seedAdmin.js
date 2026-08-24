@@ -26,7 +26,9 @@ export default async function seedAdmin() {
   console.log(`Admin ready: ${ADMIN_EMAIL}`);
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+import path from "node:path";
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   mongoose
     .connect(process.env.MONGODB_URI)
     .then(seedAdmin)
