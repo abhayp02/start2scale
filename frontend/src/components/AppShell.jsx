@@ -37,10 +37,25 @@ const evaluator = [
   ["Reports", "/reports"],
   ["Notifications", "/notifications"],
 ];
+const admin = [
+  ["Overview", "/admin"],
+  ["Users", "/admin/users"],
+  ["Government Organizations", "/admin/government"],
+  ["Startups", "/admin/startups"],
+  ["Evaluators", "/admin/evaluators"],
+  ["Challenges", "/admin/challenges"],
+  ["AI Operations", "/admin/ai"],
+  ["Templates", "/admin/templates"],
+  ["Analytics", "/admin/analytics"],
+  ["Audit Trail", "/admin/audit"],
+  ["Platform Settings", "/admin/settings"],
+];
 export default function AppShell() {
   const { user, logout } = useAuth();
   const items =
-    user.role === "startup"
+    user.role === "admin"
+      ? admin
+      : user.role === "startup"
       ? startup
       : user.role === "evaluator"
         ? evaluator
@@ -52,7 +67,9 @@ export default function AppShell() {
           <span className="brand-mark">S2</span>
           <span>
             <b className="brand-name block">Start2Scale</b>
-            <small className="text-[#9fb0c8]">Innovation Procurement</small>
+            <small className="text-[#9fb0c8]">
+              {user.role === "admin" ? "Administration" : "Innovation Procurement"}
+            </small>
           </span>
         </div>
         <nav className="side-nav">

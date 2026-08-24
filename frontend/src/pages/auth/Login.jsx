@@ -25,6 +25,10 @@ export default function Login({ portal = "government" }) {
         logout();
         throw new Error("Please use the startup portal for this account.");
       }
+      if (loggedInUser.role === "admin") {
+        logout();
+        throw new Error("Please use the administrator portal for this account.");
+      }
       navigate("/dashboard");
     } catch (requestError) {
       setError(requestError.message);

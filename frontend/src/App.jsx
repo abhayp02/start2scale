@@ -5,11 +5,14 @@ import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
 import Landing from "./pages/Landing.jsx";
 import OperationalPage from "./pages/OperationalPage.jsx";
 import Login from "./pages/auth/Login.jsx";
+import AdminLogin from "./pages/auth/AdminLogin.jsx";
 import Register from "./pages/auth/Register.jsx";
+import AdminConsole from "./pages/admin/AdminConsole.jsx";
 import AnalyticsDashboard from "./pages/dashboard/AnalyticsDashboard.jsx";
 import GovernmentDashboard from "./pages/dashboard/GovernmentDashboard.jsx";
 import PaymentsDue from "./pages/dashboard/PaymentsDue.jsx";
 import StartupDashboard from "./pages/dashboard/StartupDashboard.jsx";
+import EvaluatorDashboard from "./pages/dashboard/EvaluatorDashboard.jsx";
 import AIMatching from "./pages/department/AIMatching.jsx";
 import CreateChallenge from "./pages/department/CreateChallenge.jsx";
 import MyChallenges from "./pages/department/MyChallenges.jsx";
@@ -28,6 +31,8 @@ import TemplateLibrary from "./pages/templates/TemplateLibrary.jsx";
 
 function AccountHome() {
   const { user } = useAuth();
+  if (user.role === "admin") return <Navigate to="/admin" replace />;
+  if (user.role === "evaluator") return <EvaluatorDashboard />;
   return user.role === "startup" ? (
     <StartupDashboard />
   ) : (
@@ -49,6 +54,7 @@ export default function App() {
             element={<Login portal="government" />}
           />
           <Route path="/startup/login" element={<Login portal="startup" />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/register" element={<Register />} />
 
           <Route element={<ProtectedRoute />}>
@@ -62,6 +68,20 @@ export default function App() {
                 path="/pilots/:pilotId/milestones"
                 element={<MilestoneTracker />}
               />
+
+              <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+                <Route path="/admin" element={<AdminConsole />} />
+                <Route path="/admin/users" element={<AdminConsole view="users" />} />
+                <Route path="/admin/government" element={<AdminConsole view="government" />} />
+                <Route path="/admin/startups" element={<AdminConsole view="startups" />} />
+                <Route path="/admin/evaluators" element={<AdminConsole view="evaluators" />} />
+                <Route path="/admin/challenges" element={<AdminConsole view="challenges" />} />
+                <Route path="/admin/ai" element={<AdminConsole view="ai" />} />
+                <Route path="/admin/templates" element={<AdminConsole view="templates" />} />
+                <Route path="/admin/analytics" element={<AdminConsole view="analytics" />} />
+                <Route path="/admin/audit" element={<AdminConsole view="audit" />} />
+                <Route path="/admin/settings" element={<AdminConsole view="settings" />} />
+              </Route>
               <Route path="/pilots/:pilotId/kpis" element={<KPIUpdate />} />
               <Route path="/templates" element={<TemplateLibrary />} />
               <Route path="/analytics" element={<AnalyticsDashboard />} />

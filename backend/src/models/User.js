@@ -13,6 +13,15 @@ const startupProfileSchema = new mongoose.Schema(
       type: String,
       enum: ["idea-only", "prototype", "deployed"],
     },
+    companyRegistrationNumber: {
+      type: String,
+      trim: true,
+    },
+    profileStatus: {
+      type: String,
+      enum: ["profile-incomplete", "active", "restricted", "suspended"],
+      default: "active",
+    },
   },
   { _id: false },
 );
@@ -41,6 +50,23 @@ const userSchema = new mongoose.Schema({
   },
   departmentName: String,
   startupProfile: startupProfileSchema,
+  emailVerified: {
+    type: Boolean,
+    default: false,
+  },
+  accountStatus: {
+    type: String,
+    enum: ["pending-verification", "active", "suspended"],
+    default: "active",
+  },
+  verificationCodeHash: String,
+  verificationExpiresAt: Date,
+  lastLoginAt: Date,
 });
+
+userSchema.index(
+  { "startupProfile.companyRegistrationNumber": 1 },
+  { unique: true, sparse: true },
+);
 
 export default mongoose.model("User", userSchema);

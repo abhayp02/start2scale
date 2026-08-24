@@ -32,7 +32,7 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
-  async function authRequest(path, body) {
+  async function authRequest(path, body, saveWhenAuthenticated = true) {
     const response = await fetch(`${apiUrl}/auth/${path}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -44,8 +44,8 @@ export function AuthProvider({ children }) {
       throw new Error(data.message || "Authentication request failed");
     }
 
-    saveSession(data);
-    return data.user;
+    if (saveWhenAuthenticated && data.token) saveSession(data);
+    return data;
   }
 
   useEffect(() => {
@@ -74,8 +74,13 @@ export function AuthProvider({ children }) {
       user,
       token,
       loading,
-      login: (credentials) => authRequest("login", credentials),
+      login: async (credentials) =>
+        (await authRequest("login", credentials)).user,
+      adminLogin: async (credentials) =>
+        (await authRequest("admin/login", credentials)).user,
       register: (details) => authRequest("register", details),
+      verifyGovernmentEmail: async (details) =>
+        (await authRequest("verify-government-email", details)).user,
       logout,
     }),
     [user, token, loading],

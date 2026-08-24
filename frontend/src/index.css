@@ -182,6 +182,14 @@ a {
   color: #344054;
   border: 1px solid #d0d5dd;
 }
+.btn-danger {
+  background: #fff;
+  color: #b42318;
+  border: 1px solid #fecdca;
+}
+.btn-danger:hover {
+  background: #fef3f2;
+}
 .metrics {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -499,6 +507,208 @@ a {
   color: #155eef;
   box-shadow: 0 1px 3px #d0d5dd;
 }
+.form-error {
+  margin-top: 16px;
+  border-radius: 8px;
+  background: #fef3f2;
+  padding: 12px;
+  color: #b42318;
+  font-size: 12px;
+}
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.verification-page,
+.admin-login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px 18px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(21, 94, 239, 0.12), transparent 38%),
+    #f8fafc;
+}
+.verification-card,
+.admin-login-card {
+  width: 100%;
+  max-width: 460px;
+  border: 1px solid #eaecf0;
+  border-radius: 16px;
+  background: #fff;
+  padding: 32px;
+  box-shadow: 0 18px 50px rgba(11, 31, 58, 0.09);
+}
+.verification-icon,
+.admin-security-mark {
+  width: 54px;
+  height: 54px;
+  margin: 28px auto 18px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: #eff4ff;
+  color: #155eef;
+  font-size: 24px;
+  font-weight: 800;
+}
+.demo-code-note,
+.admin-login-note {
+  display: grid;
+  gap: 6px;
+  margin: 22px 0;
+  padding: 14px;
+  border: 1px solid #fedf89;
+  border-radius: 10px;
+  background: #fffaeb;
+  color: #7a2e0e;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.admin-login-note {
+  border-color: #eaecf0;
+  background: #f8fafc;
+  color: #667085;
+  text-align: center;
+}
+.verification-input {
+  text-align: center;
+  letter-spacing: 0.28em;
+  font-size: 18px;
+  font-weight: 700;
+}
+.public-footer {
+  max-width: 1240px;
+  margin: auto;
+  padding: 24px;
+  border-top: 1px solid #eaecf0;
+  display: flex;
+  justify-content: space-between;
+  color: #667085;
+  font-size: 12px;
+}
+.public-footer a {
+  color: #475467;
+  text-decoration: none;
+  font-weight: 600;
+}
+.admin-toolbar {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 220px auto;
+  gap: 12px;
+  align-items: end;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.admin-table th {
+  background: #f8fafc;
+  color: #475467;
+  text-align: left;
+  font-weight: 650;
+  padding: 12px 16px;
+  border-bottom: 1px solid #eaecf0;
+  white-space: nowrap;
+}
+.admin-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #eaecf0;
+  color: #344054;
+  vertical-align: middle;
+}
+.admin-table td small {
+  display: block;
+  margin-top: 3px;
+  color: #667085;
+}
+.admin-empty {
+  padding: 38px;
+  text-align: center;
+  color: #667085;
+  font-size: 13px;
+}
+.admin-health-card {
+  border-radius: 14px;
+  padding: 23px;
+  color: #fff;
+  background: linear-gradient(145deg, #0b1f3a, #143b6d);
+}
+.admin-health-card h2 {
+  margin: 8px 0 20px;
+  font-size: 20px;
+  font-weight: 700;
+}
+.health-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: #c8d2e1;
+  font-size: 12px;
+}
+.health-line b {
+  color: #6ce9a6;
+}
+.audit-detail {
+  display: block;
+  max-width: 340px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #667085;
+  font-size: 10px;
+}
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid #eaecf0;
+  color: #667085;
+  font-size: 12px;
+}
+.setting-row b {
+  color: #344054;
+}
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.cap-tag {
+  padding: 6px 9px;
+  border-radius: 7px;
+  background: #eff4ff;
+  color: #155eef;
+  font-size: 11px;
+  font-weight: 650;
+}
+.protection-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 18px;
+}
+.protection-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid #eaecf0;
+  border-radius: 10px;
+  font-size: 12px;
+  color: #344054;
+}
+.protection-item span {
+  color: #138808;
+}
 @media (max-width: 1050px) {
   .metrics {
     grid-template-columns: repeat(2, 1fr);
@@ -535,6 +745,10 @@ a {
   }
   .match {
     grid-template-columns: 68px 1fr;
+  }
+  .admin-toolbar,
+  .protection-grid {
+    grid-template-columns: 1fr;
   }
   .hero h1 {
     font-size: 36px;

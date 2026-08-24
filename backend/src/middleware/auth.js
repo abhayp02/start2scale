@@ -21,6 +21,14 @@ export async function authenticate(req, res, next) {
       return res.status(401).json({ message: "User no longer exists" });
     }
 
+    if (user.accountStatus === "suspended") {
+      return res.status(403).json({ message: "This account is suspended" });
+    }
+
+    if (user.accountStatus === "pending-verification") {
+      return res.status(403).json({ message: "Email verification is required" });
+    }
+
     req.user = user;
     next();
   } catch (error) {

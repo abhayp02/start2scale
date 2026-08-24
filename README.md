@@ -77,6 +77,23 @@ node src/seed/seedStartups.js
 
 Both scripts are idempotent and can be run more than once.
 
+Seed the administrator account from `backend/`:
+
+```powershell
+node src/seed/seedAdmin.js
+```
+
+Admin portal credentials:
+
+```text
+URL: http://localhost:5173/admin/login
+Email: admin@scale2start.demo
+Password: Demo@1234
+```
+
+The admin account is provisioned only through the seed script. Public admin
+registration is intentionally unavailable.
+
 All seeded startup accounts use this password:
 
 ```text
@@ -89,6 +106,15 @@ Example startup login:
 Email: contact@bhulekhai.demo
 Password: Demo@1234
 ```
+
+Government and evaluator registration accepts approved government domains.
+For the prototype, verification uses the first three alphanumeric characters
+before `@`, followed by `123`. For example, `abhay@gov.in` uses `abh123`.
+Configure additional demo agency domains with `GOVERNMENT_EMAIL_DOMAINS`.
+
+Startup registration includes rate limiting, a honeypot, disposable-email
+blocking, unique email and company registration number validation, and an
+information-accuracy declaration.
 
 Other seeded emails include `team@agrivision.demo`, `contact@mediscribe.demo`, `info@urbanpulse.demo`, and `hello@shikshatrack.demo`.
 
@@ -118,6 +144,7 @@ Open:
 - Landing page: <http://localhost:5173/welcome>
 - Government login: <http://localhost:5173/government/login>
 - Startup login: <http://localhost:5173/startup/login>
+- Admin login: <http://localhost:5173/admin/login>
 - API health check: <http://localhost:5000/api/health>
 
 ## Suggested demo flow

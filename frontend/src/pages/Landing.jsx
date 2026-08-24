@@ -87,6 +87,10 @@ export default function Landing() {
           </section>
         </div>
       </main>
+      <footer className="public-footer">
+        <span>© 2026 Start2Scale · Government innovation procurement</span>
+        <Link to="/admin/login">Admin Portal</Link>
+      </footer>
     </div>
   );
 }

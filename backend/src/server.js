@@ -12,6 +12,7 @@ import milestoneRoutes from "./routes/milestoneRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import kpiRoutes from "./routes/kpiRoutes.js";
 import templateRoutes from "./routes/templateRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 import path from "node:path";
 
 dotenv.config({ path: fileURLToPath(new URL("../../.env", import.meta.url)) });
@@ -30,6 +31,7 @@ app.use("/api/milestones", milestoneRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/kpis", kpiRoutes);
 app.use("/api/templates", templateRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/uploads", express.static(path.resolve(process.cwd(), "../uploads")));
 
 app.get("/api/health", (req, res) => {

@@ -223,7 +223,13 @@ export default async function seedStartups() {
   for (const startup of startups)
     await User.findOneAndUpdate(
       { email: startup.email },
-      { ...startup, passwordHash, role: "startup" },
+      {
+        ...startup,
+        passwordHash,
+        role: "startup",
+        emailVerified: true,
+        accountStatus: "active",
+      },
       { upsert: true, new: true, runValidators: true },
     );
   console.log(
