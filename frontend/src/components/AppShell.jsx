@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import BrandMark from "./BrandMark.jsx";
 const gov = [
@@ -50,8 +50,43 @@ const admin = [
   ["Audit Trail", "/admin/audit"],
   ["Platform Settings", "/admin/settings"],
 ];
+
+const navSymbols = {
+  Overview: "⌂",
+  Challenges: "◇",
+  "Discover Challenges": "◇",
+  "AI Solution Matching": "✦",
+  "AI Recommendations": "✦",
+  "AI Operations": "✦",
+  Applications: "▤",
+  "My Applications": "▤",
+  "Assigned Applications": "▤",
+  Evaluation: "✓",
+  Evaluations: "✓",
+  Evaluators: "✓",
+  "Pilot Programs": "◉",
+  Procurement: "▣",
+  Contracts: "▣",
+  Payments: "₹",
+  "Scale-Up": "↗",
+  Performance: "▥",
+  Analytics: "▥",
+  Reports: "▧",
+  "Audit Trail": "◷",
+  Notifications: "◌",
+  Settings: "⚙",
+  "Platform Settings": "⚙",
+  Documents: "▱",
+  "Company Profile": "◎",
+  Users: "♙",
+  "Government Organizations": "◆",
+  Startups: "△",
+  Templates: "▦",
+};
+
 export default function AppShell() {
   const { user, logout } = useAuth();
+  const location = useLocation();
   const items =
     user.role === "admin"
       ? admin
@@ -73,7 +108,8 @@ export default function AppShell() {
           </span>
         </div>
         <nav className="side-nav">
-          {items.map(([n, p], i) => (
+          <span className="nav-section-label">Workspace</span>
+          {items.map(([n, p]) => (
             <NavLink
               end={p === "/"}
               className={({ isActive }) =>
@@ -82,26 +118,8 @@ export default function AppShell() {
               to={p}
               key={n}
             >
-              <span>
-                {
-                  [
-                    "⌂",
-                    "◇",
-                    "✦",
-                    "▤",
-                    "✓",
-                    "◉",
-                    "▣",
-                    "↗",
-                    "▥",
-                    "▧",
-                    "◷",
-                    "◌",
-                    "⚙",
-                  ][i]
-                }
-              </span>
-              {n}
+              <span className="nav-symbol">{navSymbols[n] || "·"}</span>
+              <span>{n}</span>
             </NavLink>
           ))}
         </nav>
@@ -124,11 +142,19 @@ export default function AppShell() {
             <BrandMark compact />
             <b>Start2Scale</b>
           </div>
-          <div className="search">
-            ⌕ &nbsp; Search challenges, startups or pilots...
+          <div className="topbar-context">
+            <div className="search">
+              <span>⌕</span>
+              <span>Search challenges, startups or pilots...</span>
+              <kbd>⌘ K</kbd>
+            </div>
+            <span className="route-context">
+              {items.find(([, path]) => location.pathname.startsWith(path))?.[0] || "Workspace"}
+            </span>
           </div>
           <div className="flex items-center gap-3">
             <span className="badge success">● System operational</span>
+            <span className="role-chip">{user.role}</span>
             <NavLink to="/notifications" aria-label="Notifications">
               ♢
             </NavLink>

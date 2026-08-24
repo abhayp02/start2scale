@@ -26,6 +26,7 @@ import CreatePilot from "./pages/pilots/CreatePilot.jsx";
 import Apply from "./pages/startup/Apply.jsx";
 import BrowseChallenges from "./pages/startup/BrowseChallenges.jsx";
 import MyApplications from "./pages/startup/MyApplications.jsx";
+import CompanyProfile from "./pages/startup/CompanyProfile.jsx";
 import GenerateContract from "./pages/templates/GenerateContract.jsx";
 import TemplateLibrary from "./pages/templates/TemplateLibrary.jsx";
 
@@ -109,10 +110,6 @@ export default function App() {
                 element={<OperationalPage title="Settings" />}
               />
               <Route
-                path="/company-profile"
-                element={<OperationalPage title="Company Profile" />}
-              />
-              <Route
                 path="/documents"
                 element={<OperationalPage title="Documents" />}
               />
@@ -145,6 +142,7 @@ export default function App() {
                 />
               </Route>
               <Route element={<ProtectedRoute allowedRoles={["startup"]} />}>
+                <Route path="/company-profile" element={<CompanyProfile />} />
                 <Route path="/challenges" element={<BrowseChallenges />} />
                 <Route
                   path="/challenges/:challengeId/apply"

@@ -32,6 +32,11 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
+  function updateCurrentUser(nextUser) {
+    localStorage.setItem("start2scale_user", JSON.stringify(nextUser));
+    setUser(nextUser);
+  }
+
   async function authRequest(path, body, saveWhenAuthenticated = true) {
     const response = await fetch(`${apiUrl}/auth/${path}`, {
       method: "POST",
@@ -81,6 +86,7 @@ export function AuthProvider({ children }) {
       register: (details) => authRequest("register", details),
       verifyGovernmentEmail: async (details) =>
         (await authRequest("verify-government-email", details)).user,
+      updateCurrentUser,
       logout,
     }),
     [user, token, loading],

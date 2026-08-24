@@ -32,7 +32,7 @@ export default function GovernmentDashboard() {
     ["Estimated Public Impact", metrics?.estimatedImpact ?? "—"],
   ];
   return (
-    <main className="page dashboard-page">
+    <main className="page dashboard-page government-dashboard">
       <header className="page-head">
         <div>
           <p className="eyebrow">Government workspace</p>
@@ -43,10 +43,16 @@ export default function GovernmentDashboard() {
             Here’s the latest across your innovation procurement portfolio.
           </p>
         </div>
-        <Link className="btn btn-primary" to="/department/challenges/new">
-          ＋ Publish Challenge
+        <Link className="btn btn-primary publish-challenge-button" to="/department/challenges/new">
+          <span aria-hidden="true">＋</span>
+          Publish Challenge
+          <span className="publish-arrow" aria-hidden="true">→</span>
         </Link>
       </header>
+      <section className="government-mandate-strip">
+        <div><span>PUBLIC INNOVATION PORTFOLIO</span><b>{user.departmentName || "Government Department"}</b></div>
+        <p>Challenge discovery</p><i>→</i><p>Evidence-led pilots</p><i>→</i><p>Outcome procurement</p>
+      </section>
       <div className="metrics">
         {cards.map(([a, b]) => (
           <div className="metric" key={a}>
@@ -67,7 +73,7 @@ export default function GovernmentDashboard() {
         </section>
       )}
       {user.governmentProfile && (
-        <section className="card mb-5">
+        <section className="card mb-5 government-profile-card">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <p className="eyebrow">Organization profile</p>
