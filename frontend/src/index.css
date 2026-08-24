@@ -62,6 +62,15 @@ a {
   font-weight: 800;
   box-shadow: inset 0 -3px #ff9933;
 }
+.brand-mark svg {
+  width: 27px;
+  height: 27px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 .brand-name {
   font-size: 18px;
   font-weight: 800;
@@ -70,6 +79,13 @@ a {
   display: grid;
   gap: 3px;
   overflow: auto;
+}
+.side-nav::-webkit-scrollbar {
+  width: 5px;
+}
+.side-nav::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.18);
 }
 .nav-link {
   display: flex;
@@ -121,6 +137,10 @@ a {
   position: sticky;
   top: 0;
   z-index: 20;
+}
+.mobile-brand,
+.mobile-nav {
+  display: none;
 }
 .search {
   background: #f8fafc;
@@ -204,6 +224,21 @@ a {
 }
 .metric {
   padding: 18px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.metric::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: #155eef;
+}
+.metric:hover,
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(16, 24, 40, 0.08);
 }
 .metric-label {
   color: #667085;
@@ -222,6 +257,7 @@ a {
 }
 .card {
   padding: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .card-title {
   font-size: 15px;
@@ -412,21 +448,24 @@ a {
 }
 .hero {
   min-height: 100vh;
-  background: linear-gradient(180deg, #f3f7ff, #fff);
+  background: #f8fafc;
 }
 .hero-body {
-  text-align: center;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(520px, 1.1fr);
+  gap: 20px 32px;
+  text-align: left;
   max-width: 1180px;
   margin: auto;
-  padding: 75px 24px;
+  padding: 66px 24px 54px;
 }
 .hero h1 {
-  font-size: 58px;
+  font-size: 55px;
   line-height: 1.04;
   letter-spacing: -0.055em;
   color: #0b1f3a;
-  max-width: 900px;
-  margin: 24px auto 18px;
+  max-width: 690px;
+  margin: 22px 0 18px;
 }
 .hero h1 span {
   color: #155eef;
@@ -435,14 +474,110 @@ a {
   font-size: 18px;
   line-height: 1.65;
   color: #667085;
-  max-width: 780px;
-  margin: auto;
+  max-width: 650px;
+  margin: 0;
 }
 .hero-actions {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
   gap: 12px;
   margin: 30px 0 48px;
+}
+.hero-copy-column {
+  align-self: center;
+  position: relative;
+  z-index: 2;
+}
+.hero-visual {
+  min-height: 470px;
+  border-radius: 30px;
+  background-image:
+    linear-gradient(90deg, #f8fafc 0%, rgba(248, 250, 252, 0.18) 24%, transparent 50%),
+    url("/assets/government-innovation-hero.png");
+  background-size: cover;
+  background-position: 58% center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(21, 94, 239, 0.08);
+}
+.hero-visual::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ff9933 0 33%, #f8fafc 33% 66%, #138808 66%);
+  opacity: 0.7;
+}
+.hero-float-card {
+  position: absolute;
+  display: grid;
+  padding: 13px 16px;
+  min-width: 145px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 14px 34px rgba(11, 31, 58, 0.15);
+  backdrop-filter: blur(8px);
+  animation: float 5s ease-in-out infinite;
+}
+.hero-float-card small {
+  color: #667085;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+.hero-float-card b {
+  color: #155eef;
+  font-size: 24px;
+}
+.hero-float-card span {
+  color: #667085;
+  font-size: 9px;
+}
+.match-float {
+  top: 38px;
+  right: 22px;
+}
+.impact-float {
+  bottom: 25px;
+  left: 56px;
+  animation-delay: -2.5s;
+}
+.impact-float b {
+  color: #138808;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: #155eef;
+  box-shadow: 0 0 0 5px rgba(21, 94, 239, 0.12);
+}
+.hero-text-link {
+  color: #155eef;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.trust-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  color: #667085;
+  font-size: 10px;
+}
+.trust-row b {
+  color: #344054;
+}
+.hero-body > .card,
+.hero-body > .portal-grid {
+  grid-column: 1 / -1;
 }
 .portal-grid {
   display: grid;
@@ -457,6 +592,55 @@ a {
   border: 1px solid #eaecf0;
   border-radius: 14px;
   padding: 23px;
+  position: relative;
+  overflow: hidden;
+  border-top: 3px solid #ff9933;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+.portal::after {
+  content: "";
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  right: -65px;
+  bottom: -65px;
+  border-radius: 50%;
+  background: rgba(255, 153, 51, 0.08);
+}
+.portal.startup-portal {
+  border-top-color: #155eef;
+}
+.portal.startup-portal::after {
+  background: rgba(21, 94, 239, 0.08);
+}
+.portal:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 34px rgba(11, 31, 58, 0.09);
+}
+.portal > a {
+  display: inline-block;
+  margin-top: 18px;
+  color: #155eef;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.portal-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  font-size: 20px;
+  font-weight: 800;
+}
+.government-icon {
+  color: #9a4b00;
+  background: #fff4e8;
+}
+.startup-icon {
+  color: #155eef;
+  background: #eff4ff;
 }
 .auth-page {
   min-height: 100vh;
@@ -470,6 +654,45 @@ a {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.auth-brand::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background-image:
+    linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(to bottom right, transparent, #000);
+}
+.auth-brand > div {
+  position: relative;
+  z-index: 1;
+}
+.auth-government .auth-brand {
+  background:
+    radial-gradient(circle at 85% 15%, rgba(255,153,51,.24), transparent 28%),
+    radial-gradient(circle at 20% 90%, rgba(19,136,8,.18), transparent 24%),
+    #0b1f3a;
+}
+.auth-government .auth-brand::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 5px;
+  background: linear-gradient(90deg, #ff9933 0 33%, #fff 33% 66%, #138808 66%);
+}
+.auth-startup .auth-brand {
+  background:
+    radial-gradient(circle at 80% 18%, rgba(45,212,191,.25), transparent 28%),
+    linear-gradient(145deg, #071a33, #103c68);
+}
+.auth-startup .brand-mark {
+  background: #0f9f91;
+  box-shadow: inset 0 -3px #5eead4;
 }
 .auth-brand h1 {
   font-size: 40px;
@@ -595,6 +818,264 @@ a {
   text-decoration: none;
   font-weight: 600;
 }
+.public-footer > div {
+  display: grid;
+  gap: 3px;
+}
+.public-footer > div b {
+  color: #0b1f3a;
+}
+.public-footer .admin-portal-link {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 230px;
+  padding: 11px 13px;
+  border: 1px solid #d0d5dd;
+  border-radius: 11px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(11, 31, 58, 0.05);
+}
+.admin-portal-link:hover {
+  border-color: #98a2b3;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(11, 31, 58, 0.1);
+}
+.admin-portal-link > span:nth-child(2) {
+  display: grid;
+  flex: 1;
+}
+.admin-portal-link small {
+  color: #98a2b3;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+}
+.admin-portal-link b {
+  color: #0b1f3a;
+  font-size: 12px;
+}
+.admin-link-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  color: #fff;
+  background: #0b1f3a;
+  font-size: 17px;
+}
+.admin-portal-link i {
+  color: #155eef;
+  font-style: normal;
+}
+
+/* Role-specific portal identities */
+.shell {
+  --role-accent: #155eef;
+  --role-soft: #eff4ff;
+  --role-sidebar: #0b1f3a;
+}
+.role-government {
+  --role-accent: #155eef;
+  --role-soft: #fff8ef;
+  --role-sidebar: #0b1f3a;
+}
+.role-startup {
+  --role-accent: #0f9f91;
+  --role-soft: #ecfdf9;
+  --role-sidebar: #082c35;
+}
+.role-evaluator {
+  --role-accent: #6941c6;
+  --role-soft: #f4f3ff;
+  --role-sidebar: #221747;
+}
+.role-admin {
+  --role-accent: #175cd3;
+  --role-soft: #eef4ff;
+  --role-sidebar: #101828;
+}
+.shell .sidebar {
+  background: var(--role-sidebar);
+}
+.shell .sidebar::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: var(--role-accent);
+}
+.role-government .sidebar::after {
+  background: linear-gradient(90deg, #ff9933 0 33%, #fff 33% 66%, #138808 66%);
+}
+.shell .nav-link.active {
+  background: var(--role-accent);
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.18);
+}
+.shell .brand-mark {
+  background: var(--role-accent);
+}
+.role-government .brand-mark {
+  box-shadow: inset 0 -3px #ff9933;
+}
+.shell .main {
+  background: radial-gradient(circle at 95% 2%, var(--role-soft), transparent 26%), #f8fafc;
+}
+.shell .topbar {
+  border-top: 2px solid var(--role-accent);
+}
+.shell .page-title {
+  color: var(--role-sidebar);
+}
+.shell .eyebrow,
+.shell .metric-value {
+  color: var(--role-accent);
+}
+.shell .metric::before,
+.shell .dot {
+  background: var(--role-accent);
+}
+.shell .btn-primary {
+  background: var(--role-accent);
+}
+.shell .metric:nth-child(3n + 2)::before {
+  opacity: 0.62;
+}
+.shell .metric:nth-child(3n)::before {
+  background: #12b76a;
+}
+.role-government .page::before {
+  content: "";
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: 260px;
+  height: 260px;
+  pointer-events: none;
+  background: radial-gradient(circle at bottom right, rgba(19, 136, 8, 0.06), transparent 65%);
+}
+.role-startup .ai-panel {
+  background: linear-gradient(135deg, #082c35, #0d5960);
+}
+.role-evaluator .protection-item span {
+  color: #6941c6;
+}
+.role-admin .admin-health-card {
+  background: linear-gradient(145deg, #101828, #263b60);
+}
+.admin-login-page {
+  background: radial-gradient(circle at 15% 20%, rgba(21, 94, 239, 0.13), transparent 26%), radial-gradient(circle at 85% 80%, rgba(255, 153, 51, 0.09), transparent 25%), linear-gradient(145deg, #f8fafc, #eef4ff);
+}
+.admin-login-card {
+  border-top: 4px solid #101828;
+}
+.dashboard-page > .page-head {
+  position: relative;
+  overflow: hidden;
+  padding: 22px 24px;
+  border: 1px solid #eaecf0;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 5px 18px rgba(16, 24, 40, 0.05);
+}
+.dashboard-page > .page-head::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 190px;
+  opacity: 0.14;
+  background: repeating-linear-gradient(135deg, transparent 0 12px, var(--role-accent) 12px 13px);
+}
+
+/* Minimal role artwork for authentication forms */
+.login-page .auth-form-wrap {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(145deg, #f8fafc, #f1f5fb);
+}
+.login-page .auth-form-wrap::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  width: min(74%, 560px);
+  height: 78%;
+  right: -5%;
+  bottom: -7%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.09;
+  filter: saturate(0.7);
+}
+.login-page .auth-form-wrap::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+}
+.login-page.auth-government .auth-form-wrap::before {
+  background-image: url("/assets/government-auth-watermark.png");
+  opacity: 0.075;
+}
+.login-page.auth-government .auth-form-wrap::after {
+  background:
+    radial-gradient(circle at 8% 12%, rgba(255, 153, 51, 0.1), transparent 24%),
+    radial-gradient(circle at 94% 88%, rgba(19, 136, 8, 0.07), transparent 24%);
+}
+.login-page.auth-startup .auth-form-wrap::before {
+  width: min(82%, 610px);
+  right: -8%;
+  background-image: url("/assets/startup-auth-watermark.png");
+  opacity: 0.11;
+}
+.login-page.auth-startup .auth-form-wrap::after {
+  background:
+    radial-gradient(circle at 8% 12%, rgba(21, 94, 239, 0.09), transparent 25%),
+    radial-gradient(circle at 92% 88%, rgba(15, 159, 145, 0.1), transparent 26%);
+}
+.login-page .auth-form {
+  padding: 30px;
+  border: 1px solid rgba(208, 213, 221, 0.82);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: 0 18px 44px rgba(11, 31, 58, 0.09);
+  backdrop-filter: blur(9px);
+}
+.login-page.auth-government .auth-form {
+  border-top: 3px solid #ff9933;
+  box-shadow:
+    0 18px 44px rgba(11, 31, 58, 0.09),
+    inset 0 -2px rgba(19, 136, 8, 0.45);
+}
+.login-page.auth-startup .auth-form {
+  border-top: 3px solid #0f9f91;
+}
+.login-page .form-input {
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+.login-page .form-input:focus {
+  outline: 3px solid rgba(21, 94, 239, 0.12);
+  border-color: #155eef;
+}
+.login-page.auth-startup .form-input:focus {
+  outline-color: rgba(15, 159, 145, 0.14);
+  border-color: #0f9f91;
+}
+.role-government .dashboard-page > .page-head {
+  border-left: 4px solid #ff9933;
+}
+.role-startup .dashboard-page > .page-head {
+  border-left: 4px solid #0f9f91;
+}
+.role-evaluator .dashboard-page > .page-head {
+  border-left: 4px solid #6941c6;
+}
+.role-admin .dashboard-page > .page-head {
+  border-left: 4px solid #101828;
+}
 .admin-toolbar {
   display: grid;
   grid-template-columns: minmax(220px, 1fr) 220px auto;
@@ -719,6 +1200,12 @@ a {
   .hero h1 {
     font-size: 46px;
   }
+  .hero-body {
+    grid-template-columns: 1fr;
+  }
+  .hero-visual {
+    min-height: 430px;
+  }
 }
 @media (max-width: 780px) {
   .sidebar {
@@ -726,6 +1213,48 @@ a {
   }
   .main {
     margin-left: 0;
+  }
+  .topbar {
+    height: 62px;
+    padding: 0 16px;
+  }
+  .mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--role-sidebar);
+  }
+  .mobile-brand .brand-mark {
+    width: 32px;
+    height: 32px;
+  }
+  .mobile-brand .brand-mark svg {
+    width: 22px;
+    height: 22px;
+  }
+  .mobile-nav {
+    display: flex;
+    gap: 6px;
+    padding: 9px 14px;
+    overflow-x: auto;
+    border-bottom: 1px solid #eaecf0;
+    background: rgba(255, 255, 255, 0.96);
+    position: sticky;
+    top: 62px;
+    z-index: 19;
+  }
+  .mobile-nav a {
+    padding: 7px 10px;
+    border-radius: 7px;
+    color: #667085;
+    font-size: 11px;
+    font-weight: 650;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .mobile-nav a.active {
+    color: #fff;
+    background: var(--role-accent);
   }
   .page {
     padding: 22px 16px;
@@ -752,6 +1281,17 @@ a {
   }
   .hero h1 {
     font-size: 36px;
+  }
+  .hero-body {
+    padding-top: 42px;
+  }
+  .hero-visual {
+    min-height: 330px;
+  }
+  .public-footer {
+    align-items: flex-start;
+    gap: 18px;
+    flex-direction: column;
   }
 }
 @media (max-width: 500px) {

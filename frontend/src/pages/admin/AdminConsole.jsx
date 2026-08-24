@@ -136,7 +136,7 @@ function AdminOverview({ data }) {
     ["Pilots", data.metrics.pilots],
   ];
   return (
-    <main className="page">
+    <main className="page dashboard-page">
       <header className="page-head">
         <div><p className="eyebrow">Platform control centre</p><h1 className="page-title">Administration overview</h1><p className="subtitle">Monitor access, integrity and operational health across Start2Scale.</p></div>
         <span className="badge success">● All core services operational</span>

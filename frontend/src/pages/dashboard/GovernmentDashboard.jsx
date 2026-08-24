@@ -13,7 +13,7 @@ const m = [
 export default function GovernmentDashboard() {
   const { user } = useAuth();
   return (
-    <main className="page">
+    <main className="page dashboard-page">
       <header className="page-head">
         <div>
           <p className="eyebrow">Government workspace</p>

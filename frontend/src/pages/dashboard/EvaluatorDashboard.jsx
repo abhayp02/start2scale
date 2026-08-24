@@ -12,7 +12,7 @@ const metrics = [
 export default function EvaluatorDashboard() {
   const { user } = useAuth();
   return (
-    <main className="page">
+    <main className="page dashboard-page">
       <header className="page-head">
         <div>
           <p className="eyebrow">Independent evaluation workspace</p>

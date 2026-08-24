@@ -4,7 +4,7 @@ import Card from "../../components/Card.jsx";
 export default function StartupDashboard() {
   const { user } = useAuth();
   return (
-    <main className="page">
+    <main className="page dashboard-page">
       <header className="page-head">
         <div>
           <p className="eyebrow">Startup workspace</p>
