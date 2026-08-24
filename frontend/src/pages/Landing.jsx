@@ -17,7 +17,11 @@ export default function Landing() {
           <BrandMark />
           <b className="brand-name">Start2Scale</b>
         </Link>
-        <div className="flex gap-3">
+        <div className="landing-nav-links">
+          <a href="#how-it-works">How it works</a>
+          <Link to="/explore">Challenges</Link>
+        </div>
+        <div className="flex gap-3 landing-login-actions">
           <Link className="btn btn-secondary" to="/government/login">
             Government Login
           </Link>
@@ -55,12 +59,17 @@ export default function Landing() {
             <span><b>Human-led</b> decisions</span>
             <span><b>Auditable</b> lifecycle</span>
           </div>
+          <div className="hero-proof-grid">
+            <div><b>110+</b><span>solution profiles</span></div>
+            <div><b>7</b><span>connected stages</span></div>
+            <div><b>100%</b><span>human decision authority</span></div>
+          </div>
         </div>
         <div className="hero-visual" role="img" aria-label="Government innovation connected to startup solutions">
           <div className="hero-float-card match-float"><small>TOP AI MATCH</small><b>92%</b><span>High confidence</span></div>
           <div className="hero-float-card impact-float"><small>PUBLIC IMPACT</small><b>2.4M</b><span>Projected citizens</span></div>
         </div>
-        <section className="card lifecycle-overview">
+        <section className="card lifecycle-overview" id="how-it-works">
           <div className="lifecycle-heading">
             <p className="eyebrow">One connected innovation lifecycle</p>
             <p>
@@ -83,6 +92,23 @@ export default function Landing() {
           <p className="lifecycle-note">
             AI assists discovery and analysis; authorized officials retain every decision.
           </p>
+        </section>
+        <section className="landing-principles">
+          <div className="landing-section-heading">
+            <span className="landing-section-label">BUILT FOR PUBLIC INNOVATION</span>
+            <h2>Automation with accountability</h2>
+            <p>One platform connects discovery, evaluation and measurable public impact without replacing institutional judgment.</p>
+          </div>
+          <div className="principle-grid">
+            {[
+              ["✦", "Explainable discovery", "Every recommendation includes matching evidence, strengths and potential gaps."],
+              ["✓", "Human-led decisions", "Eligibility, scoring, shortlisting and procurement remain with authorized officials."],
+              ["◷", "End-to-end auditability", "Important actions are recorded throughout challenge, pilot and scale-up workflows."],
+              ["↗", "Outcome-led procurement", "Pilot milestones and multi-source KPIs connect spending with demonstrated impact."],
+            ].map(([symbol, title, copy], index) => (
+              <article className="principle-card" key={title}><span>{symbol}</span><small>0{index + 1}</small><h3>{title}</h3><p>{copy}</p></article>
+            ))}
+          </div>
         </section>
         <div className="portal-grid mt-5">
           <section className="portal">
