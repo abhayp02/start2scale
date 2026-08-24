@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import BrandMark from "./BrandMark.jsx";
 const gov = [
   ["Overview", "/dashboard"],
   ["Challenges", "/department/challenges"],
@@ -30,8 +31,7 @@ const startup = [
 ];
 const evaluator = [
   ["Overview", "/dashboard"],
-  ["Applications", "/evaluation/eligibility"],
-  ["Evaluation", "/evaluation/score"],
+  ["Assigned Applications", "/evaluation/score"],
   ["Pilot Programs", "/pilots"],
   ["Analytics", "/analytics"],
   ["Reports", "/reports"],
@@ -61,10 +61,10 @@ export default function AppShell() {
         ? evaluator
         : gov;
   return (
-    <div className="shell">
+    <div className={`shell role-${user.role}`}>
       <aside className="sidebar">
         <div className="brand">
-          <span className="brand-mark">S2</span>
+          <BrandMark />
           <span>
             <b className="brand-name block">Start2Scale</b>
             <small className="text-[#9fb0c8]">
@@ -120,6 +120,10 @@ export default function AppShell() {
       </aside>
       <div className="main">
         <header className="topbar">
+          <div className="mobile-brand">
+            <BrandMark compact />
+            <b>Start2Scale</b>
+          </div>
           <div className="search">
             ⌕ &nbsp; Search challenges, startups or pilots...
           </div>
@@ -131,6 +135,18 @@ export default function AppShell() {
             <span className="avatar">{user.name?.[0]}</span>
           </div>
         </header>
+        <nav className="mobile-nav" aria-label="Mobile navigation">
+          {items.slice(0, 5).map(([name, path]) => (
+            <NavLink
+              className={({ isActive }) => (isActive ? "active" : "")}
+              end={path === "/dashboard" || path === "/admin"}
+              key={name}
+              to={path}
+            >
+              {name}
+            </NavLink>
+          ))}
+        </nav>
         <Outlet />
       </div>
     </div>

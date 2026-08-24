@@ -1,8 +1,16 @@
 import Payment from "../models/Payment.js";
 import Milestone from "../models/Milestone.js";
+import Challenge from "../models/Challenge.js";
+import Pilot from "../models/Pilot.js";
 export async function paymentsDue(req, res) {
   try {
-    const payments = await Payment.find({ status: "pending" })
+    const filter = { status: "pending" };
+    if (req.user.role === "government") {
+      const challengeIds = await Challenge.find({ createdBy: req.user._id }).distinct("_id");
+      const pilotIds = await Pilot.find({ challengeId: { $in: challengeIds } }).distinct("_id");
+      filter.pilotId = { $in: pilotIds };
+    }
+    const payments = await Payment.find(filter)
       .populate("pilotId")
       .populate("milestoneId");
     return res.json({ payments });
@@ -12,8 +20,14 @@ export async function paymentsDue(req, res) {
 }
 export async function releasePayment(req, res) {
   try {
-    const payment = await Payment.findByIdAndUpdate(
-      req.params.id,
+    const filter = { _id: req.params.id };
+    if (req.user.role === "government") {
+      const challengeIds = await Challenge.find({ createdBy: req.user._id }).distinct("_id");
+      const pilotIds = await Pilot.find({ challengeId: { $in: challengeIds } }).distinct("_id");
+      filter.pilotId = { $in: pilotIds };
+    }
+    const payment = await Payment.findOneAndUpdate(
+      filter,
       { status: "released", releasedDate: new Date() },
       { new: true },
     );

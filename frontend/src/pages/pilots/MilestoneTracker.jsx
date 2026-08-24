@@ -12,7 +12,9 @@ export default function MilestoneTracker() {
       .get(`/milestones/pilot/${pilotId}`)
       .then((r) => setItems(r.data.milestones))
       .catch((e) => setError(e.response?.data?.message || "Failed to load."));
-  useEffect(load, [pilotId]);
+  useEffect(() => {
+    load();
+  }, [pilotId]);
   async function status(id, value) {
     try {
       await api.patch(`/milestones/${id}`, { status: value });

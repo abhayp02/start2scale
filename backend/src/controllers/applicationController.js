@@ -1,6 +1,7 @@
 import Application from "../models/Application.js";
 import Challenge from "../models/Challenge.js";
 import { checkEligibility } from "../middleware/eligibility.js";
+import Evaluation from "../models/Evaluation.js";
 
 export async function apply(req, res) {
   try {
@@ -71,7 +72,7 @@ export async function challengeApplications(req, res) {
       _id: req.params.challengeId,
       createdBy: req.user._id,
     });
-    if (!challenge && req.user.role === "government")
+    if (!challenge && req.user.role !== "admin")
       return res.status(404).json({ message: "Challenge not found" });
     const applications = await Application.find({
       challengeId: req.params.challengeId,
@@ -124,6 +125,8 @@ export async function shortlist(req, res) {
       return res
         .status(400)
         .json({ message: "Only eligible applications can be shortlisted" });
+    if (!(await Evaluation.exists({ applicationId: application._id, status: "submitted" })))
+      return res.status(400).json({ message: "At least one evaluator must submit a score before shortlisting" });
     application.status = "shortlisted";
     await application.save();
     return res.json({ application });

@@ -12,7 +12,9 @@ export default function MyChallenges() {
       .catch((e) =>
         setError(e.response?.data?.message || "Failed to load challenges."),
       );
-  useEffect(load, []);
+  useEffect(() => {
+    load();
+  }, []);
   async function status(id, value) {
     try {
       await api.patch(`/challenges/${id}/status`, { status: value });

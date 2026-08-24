@@ -1,10 +1,32 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import api from "../../services/api.js";
 import { useAuth } from "../../context/AuthContext.jsx";
 import Card from "../../components/Card.jsx";
 export default function StartupDashboard() {
   const { user } = useAuth();
+  const [metrics, setMetrics] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    api
+      .get("/dashboard/summary")
+      .then((response) => setMetrics(response.data.metrics))
+      .catch((requestError) =>
+        setError(requestError.response?.data?.message || "Failed to load dashboard."),
+      );
+  }, []);
+
+  const cards = [
+    ["Recommended Challenges", metrics?.recommended ?? "—"],
+    ["Active Applications", metrics?.activeApplications ?? "—"],
+    ["Shortlisted", metrics?.shortlisted ?? "—"],
+    ["Active Pilots", metrics?.activePilots ?? "—"],
+    ["Contracts", metrics?.contracts ?? "—"],
+    ["Total Opportunities", metrics?.opportunities ?? "—"],
+  ];
   return (
-    <main className="page">
+    <main className="page dashboard-page">
       <header className="page-head">
         <div>
           <p className="eyebrow">Startup workspace</p>
@@ -18,14 +40,7 @@ export default function StartupDashboard() {
         </Link>
       </header>
       <div className="metrics">
-        {[
-          ["Recommended Challenges", "14"],
-          ["Active Applications", "5"],
-          ["Shortlisted", "3"],
-          ["Active Pilots", "1"],
-          ["Contracts", "2"],
-          ["Total Opportunities", "₹8.2 Cr"],
-        ].map(([a, b]) => (
+        {cards.map(([a, b]) => (
           <div className="metric" key={a}>
             <div className="metric-label">{a}</div>
             <div className="metric-value">{b}</div>
@@ -33,45 +48,26 @@ export default function StartupDashboard() {
           </div>
         ))}
       </div>
+      {error && <div className="card mb-5 text-[#b42318]">{error}</div>}
       <div className="grid2">
         <Card title="Top recommendation">
-          <div className="flex justify-between gap-4">
-            <div>
-              <p className="eyebrow">Department of Urban Development</p>
-              <h2 className="mt-2 text-xl font-bold text-[#0b1f3a]">
-                Smart Waste Management
-              </h2>
-              <p className="mt-2 text-sm text-[#667085]">
-                Budget: ₹50L · Pilot Duration: 6 Months
-              </p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {[
-                  "Computer Vision",
-                  "Waste Management",
-                  "IoT",
-                  "Government Deployment",
-                ].map((x) => (
-                  <span className="badge blue" key={x}>
-                    ✓ {x}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="score">92%</div>
-          </div>
+          <p className="text-sm leading-6 text-[#667085]">
+            {metrics?.recommended
+              ? `${metrics.recommended} published challenges currently align with your company domain.`
+              : "No personalized recommendations are available yet. Complete your company profile or check again when new challenges are published."}
+          </p>
           <Link className="btn btn-primary mt-5" to="/recommendations">
-            View recommendation
+            View recommendations
           </Link>
         </Card>
         <section className="ai-panel">
           <p className="eyebrow !text-[#90b4ff]">Capability profile</p>
-          <h2>Profile strength: 84%</h2>
+          <h2>{user.startupProfile?.domain ? "Core profile available" : "Profile needs details"}</h2>
           <p>
-            Add certifications and government deployments to improve match
-            confidence.
+            Keep your capabilities and deployment evidence current to improve match confidence.
           </p>
           <div className="progress mt-5">
-            <span style={{ width: "84%", background: "#12b76a" }}></span>
+            <span style={{ width: user.startupProfile?.domain ? "70%" : "25%", background: "#12b76a" }}></span>
           </div>
         </section>
       </div>

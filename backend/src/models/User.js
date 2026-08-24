@@ -22,6 +22,33 @@ const startupProfileSchema = new mongoose.Schema(
       enum: ["profile-incomplete", "active", "restricted", "suspended"],
       default: "active",
     },
+    productDescription: String,
+    capabilityTags: [String],
+    industriesServed: [String],
+    certifications: [String],
+    previousDeployments: [String],
+    governmentProjects: [String],
+    customerBase: String,
+    impactMetrics: [String],
+    fundingStage: String,
+    integrationCapabilities: [String],
+    securityCompliance: [String],
+    geographicAvailability: [String],
+    pilotBudgetMin: Number,
+    pilotBudgetMax: Number,
+    implementationWeeks: Number,
+  },
+  { _id: false },
+);
+
+const governmentProfileSchema = new mongoose.Schema(
+  {
+    organizationType: String,
+    ministry: String,
+    jurisdiction: String,
+    contactDesignation: String,
+    procurementFocus: [String],
+    activePrograms: [String],
   },
   { _id: false },
 );
@@ -49,6 +76,7 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   departmentName: String,
+  governmentProfile: governmentProfileSchema,
   startupProfile: startupProfileSchema,
   emailVerified: {
     type: Boolean,

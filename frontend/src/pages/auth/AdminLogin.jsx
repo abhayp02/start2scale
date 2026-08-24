@@ -1,6 +1,7 @@
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
+import BrandMark from "../../components/BrandMark.jsx";
 
 export default function AdminLogin() {
   const { adminLogin, logout, user } = useAuth();
@@ -33,7 +34,7 @@ export default function AdminLogin() {
     <main className="admin-login-page">
       <section className="admin-login-card">
         <div className="brand justify-center !p-0">
-          <span className="brand-mark text-white">S2</span>
+          <BrandMark />
           <span>
             <b className="brand-name block text-[#0b1f3a]">Start2Scale</b>
             <small className="text-[#667085]">Platform Administration</small>

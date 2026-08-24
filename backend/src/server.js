@@ -13,6 +13,7 @@ import paymentRoutes from "./routes/paymentRoutes.js";
 import kpiRoutes from "./routes/kpiRoutes.js";
 import templateRoutes from "./routes/templateRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
 import path from "node:path";
 
 import fs from "node:fs";
@@ -39,6 +40,7 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/kpis", kpiRoutes);
 app.use("/api/templates", templateRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 app.use("/uploads", express.static(uploadsDir));
 
 app.get("/api/health", (req, res) => {

@@ -2,6 +2,8 @@ import Pilot from "../models/Pilot.js";
 import Grievance from "../models/Grievance.js";
 import KPIRecord from "../models/KPIRecord.js";
 import Application from "../models/Application.js";
+import Challenge from "../models/Challenge.js";
+import Evaluation from "../models/Evaluation.js";
 import { analyzeKPIProgress } from "../services/aiService.js";
 
 export async function createPilot(req, res) {
@@ -54,8 +56,24 @@ export async function createPilot(req, res) {
 }
 export async function listPilots(req, res) {
   try {
-    const filter =
-      req.user.role === "startup" ? { startupId: req.user._id } : {};
+    let filter = {};
+    if (req.user.role === "startup") filter = { startupId: req.user._id };
+    if (req.user.role === "government") {
+      const challengeIds = await Challenge.find({ createdBy: req.user._id }).distinct("_id");
+      filter = { challengeId: { $in: challengeIds } };
+    }
+    if (req.user.role === "evaluator") {
+      const applicationIds = await Evaluation.find({ evaluatorId: req.user._id }).distinct("applicationId");
+      const applications = await Application.find({ _id: { $in: applicationIds } })
+        .select("challengeId startupId");
+      filter = {
+        $or: applications.map((application) => ({
+          challengeId: application.challengeId,
+          startupId: application.startupId,
+        })),
+      };
+      if (!applications.length) filter = { _id: null };
+    }
     const pilots = await Pilot.find(filter)
       .populate("challengeId", "departmentName problemText")
       .populate("startupId", "name");

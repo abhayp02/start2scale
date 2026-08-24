@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
+import BrandMark from "../../components/BrandMark.jsx";
 
 export default function Login({ portal = "government" }) {
   const { login, logout, user } = useAuth();
@@ -38,11 +39,11 @@ export default function Login({ portal = "government" }) {
   }
 
   return (
-    <main className="auth-page">
+    <main className={`auth-page illustrated-auth-page auth-${portal}`}>
       <section className="auth-brand">
         <div>
           <div className="brand !p-0">
-            <span className="brand-mark">S2</span>
+            <BrandMark />
             <b className="brand-name">Start2Scale</b>
           </div>
           <p className="eyebrow !mt-16 !text-[#90b4ff]">

@@ -6,6 +6,8 @@ export default function AIMatching() {
   const [params, setParams] = useSearchParams();
   const [challenges, setChallenges] = useState([]);
   const [matches, setMatches] = useState([]);
+  const [analyzedCount, setAnalyzedCount] = useState(0);
+  const [candidateCount, setCandidateCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const id = params.get("challenge") || "";
@@ -25,10 +27,21 @@ export default function AIMatching() {
     if (!id) return;
     setLoading(true);
     setError("");
+    setMatches([]);
+    setAnalyzedCount(0);
+    setCandidateCount(0);
     api
       .get(`/challenges/${id}/matches`)
-      .then((r) => setMatches(r.data.matches))
-      .catch((e) => setError(e.response?.data?.message || "Matching failed."))
+      .then((r) => {
+        setMatches(r.data.matches);
+        setAnalyzedCount(r.data.analyzedCount || 0);
+        setCandidateCount(r.data.candidateCount || 0);
+      })
+      .catch((e) => {
+        setAnalyzedCount(e.response?.data?.analyzedCount || 0);
+        setCandidateCount(e.response?.data?.candidateCount || 0);
+        setError(e.response?.data?.message || "Matching failed.");
+      })
       .finally(() => setLoading(false));
   }, [id]);
   const challenge = challenges.find((c) => c._id === id);
@@ -70,8 +83,12 @@ export default function AIMatching() {
           </div>
           <div className="ai-stats">
             <div>
-              <strong>15</strong>
+              <strong>{analyzedCount}</strong>
               <span>STARTUPS ANALYZED</span>
+            </div>
+            <div>
+              <strong>{candidateCount}</strong>
+              <span>RELEVANT CANDIDATES</span>
             </div>
             <div>
               <strong>{matches.length}</strong>

@@ -8,6 +8,9 @@ export default function EligibilityCheck() {
   const [challenges, setChallenges] = useState([]);
   const [selected, setSelected] = useState("");
   const [apps, setApps] = useState([]);
+  const [evaluators, setEvaluators] = useState([]);
+  const [evaluatorByApplication, setEvaluatorByApplication] = useState({});
+  const [assignmentMessage, setAssignmentMessage] = useState("");
   const [error, setError] = useState("");
   useEffect(() => {
     api
@@ -19,6 +22,15 @@ export default function EligibilityCheck() {
       })
       .catch((e) =>
         setError(e.response?.data?.message || "Failed to load challenges."),
+      );
+  }, [user.role]);
+  useEffect(() => {
+    if (user.role !== "government") return;
+    api
+      .get("/evaluations/evaluators")
+      .then((response) => setEvaluators(response.data.evaluators))
+      .catch((requestError) =>
+        setError(requestError.response?.data?.message || "Failed to load evaluators."),
       );
   }, [user.role]);
   useEffect(() => {
@@ -65,6 +77,26 @@ export default function EligibilityCheck() {
       );
     }
   }
+
+  async function assignEvaluator(applicationId) {
+    const evaluatorId = evaluatorByApplication[applicationId];
+    if (!evaluatorId) {
+      setError("Select an evaluator first.");
+      return;
+    }
+    try {
+      const response = await api.post(
+        `/evaluations/application/${applicationId}/assign`,
+        { evaluatorId },
+      );
+      setError("");
+      setAssignmentMessage(
+        `${response.data.evaluation.evaluatorId.name} has been assigned successfully.`,
+      );
+    } catch (requestError) {
+      setError(requestError.response?.data?.message || "Evaluator assignment failed.");
+    }
+  }
   return (
     <main className="page">
       <header className="page-head">
@@ -89,6 +121,9 @@ export default function EligibilityCheck() {
         </select>
       </header>
       {error && <div className="card text-[#b42318]">{error}</div>}
+      {assignmentMessage && (
+        <div className="card mb-4 text-[#067647]">{assignmentMessage}</div>
+      )}
       <section className="card overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead className="border-b border-[#eaecf0] text-xs uppercase text-[#667085]">
@@ -135,12 +170,37 @@ export default function EligibilityCheck() {
                       </button>
                     )}
                     {a.status === "eligible" && user.role === "government" && (
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => shortlist(a._id)}
-                      >
-                        Shortlist
-                      </button>
+                      <>
+                        <select
+                          className="form-input min-w-48"
+                          value={evaluatorByApplication[a._id] || ""}
+                          onChange={(event) =>
+                            setEvaluatorByApplication({
+                              ...evaluatorByApplication,
+                              [a._id]: event.target.value,
+                            })
+                          }
+                        >
+                          <option value="">Select evaluator</option>
+                          {evaluators.map((evaluator) => (
+                            <option value={evaluator._id} key={evaluator._id}>
+                              {evaluator.name}
+                            </option>
+                          ))}
+                        </select>
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => assignEvaluator(a._id)}
+                        >
+                          Assign
+                        </button>
+                        <button
+                          className="btn btn-secondary"
+                          onClick={() => shortlist(a._id)}
+                        >
+                          Shortlist after score
+                        </button>
+                      </>
                     )}
                     {a.status === "shortlisted" &&
                       user.role === "government" && (
