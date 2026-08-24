@@ -1,16 +1,29 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import api from "../../services/api.js";
 import Card from "../../components/Card.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 
-const metrics = [
-  ["Assigned applications", "24"],
-  ["Eligibility pending", "8"],
-  ["Scoring pending", "6"],
-  ["Clarifications", "3"],
-];
-
 export default function EvaluatorDashboard() {
   const { user } = useAuth();
+  const [summary, setSummary] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    api
+      .get("/dashboard/summary")
+      .then((response) => setSummary(response.data.metrics))
+      .catch((requestError) =>
+        setError(requestError.response?.data?.message || "Failed to load dashboard."),
+      );
+  }, []);
+
+  const metrics = [
+    ["Assigned applications", summary?.assigned ?? "—"],
+    ["Scoring pending", summary?.pending ?? "—"],
+    ["Evaluations submitted", summary?.submitted ?? "—"],
+    ["Declined assignments", summary?.declined ?? "—"],
+  ];
   return (
     <main className="page dashboard-page">
       <header className="page-head">
@@ -34,18 +47,15 @@ export default function EvaluatorDashboard() {
           </div>
         ))}
       </div>
+      {error && <div className="card mb-5 text-[#b42318]">{error}</div>}
       <div className="grid2">
         <Card title="Evaluation queue">
-          {[
-            ["Smart Waste Management", "Technical scoring due"],
-            ["Rural Health Analytics", "Eligibility review"],
-            ["Water Quality Monitoring", "Clarification received"],
-          ].map(([challenge, status]) => (
-            <div className="activity" key={challenge}>
-              <span className="dot" />
-              <div><b>{challenge}</b><p className="text-[#667085]">{status}</p></div>
-            </div>
-          ))}
+          <p className="text-sm leading-6 text-[#667085]">
+            {summary?.pending
+              ? `${summary.pending} assigned application${summary.pending === 1 ? " is" : "s are"} ready for independent scoring.`
+              : "No evaluations are currently assigned to your account."}
+          </p>
+          <Link className="btn btn-primary mt-5" to="/evaluation/score">Open assignment queue</Link>
         </Card>
         <Card title="Evaluator safeguards">
           <div className="protection-item"><span>✓</span><b>Weighted rubric scoring</b></div>

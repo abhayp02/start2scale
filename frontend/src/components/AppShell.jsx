@@ -31,8 +31,7 @@ const startup = [
 ];
 const evaluator = [
   ["Overview", "/dashboard"],
-  ["Applications", "/evaluation/eligibility"],
-  ["Evaluation", "/evaluation/score"],
+  ["Assigned Applications", "/evaluation/score"],
   ["Pilot Programs", "/pilots"],
   ["Analytics", "/analytics"],
   ["Reports", "/reports"],

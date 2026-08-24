@@ -1,11 +1,15 @@
+import { useEffect, useState } from "react";
+import api from "../services/api.js";
+import { useAuth } from "../context/AuthContext.jsx";
+
 const content = {
   "Scale-Up": {
     kpis: [
-      ["Current Deployment", "12 Sites"],
-      ["Target Deployment", "150 Sites"],
-      ["Current Users", "4,280"],
-      ["Projected Users", "2.4M"],
-      ["Annual Savings", "₹4.8 Cr"],
+      ["Solutions Scaled", "0"],
+      ["Active Pilots", "0"],
+      ["Current Deployment", "Not started"],
+      ["Projected Users", "Not calculated"],
+      ["Annual Savings", "Not calculated"],
     ],
     items: [
       "Pilot Validated",
@@ -20,10 +24,10 @@ const content = {
   },
   "Audit Trail": {
     kpis: [
-      ["Recorded Actions", "1,284"],
-      ["Users", "86"],
-      ["Departments", "12"],
-      ["Integrity", "Verified"],
+      ["Recorded Actions", "0"],
+      ["Users", "1"],
+      ["Departments", "1"],
+      ["Integrity", "Active"],
     ],
     items: [
       "23 Aug 2026 · Challenge Published",
@@ -38,10 +42,10 @@ const content = {
   },
   Notifications: {
     kpis: [
-      ["Unread", "8"],
-      ["Action Required", "3"],
-      ["Updates", "12"],
-      ["Archived", "47"],
+      ["Unread", "0"],
+      ["Action Required", "0"],
+      ["Updates", "0"],
+      ["Archived", "0"],
     ],
     items: [
       "New AI match recommendations",
@@ -54,10 +58,10 @@ const content = {
   },
   "Company Profile": {
     kpis: [
-      ["Profile Strength", "84%"],
-      ["Capabilities", "7"],
-      ["Certifications", "4"],
-      ["Deployments", "12"],
+      ["Profile Strength", "Not calculated"],
+      ["Capabilities", "0"],
+      ["Certifications", "0"],
+      ["Deployments", "0"],
     ],
     items: [
       "Company Information",
@@ -76,12 +80,22 @@ const content = {
   },
 };
 export default function OperationalPage({ title }) {
+  const { user } = useAuth();
+  const [summary, setSummary] = useState(null);
+
+  useEffect(() => {
+    api
+      .get("/dashboard/summary")
+      .then((response) => setSummary(response.data.metrics))
+      .catch(() => setSummary({}));
+  }, []);
+
   const d = content[title] || {
     kpis: [
-      ["Open Items", "12"],
-      ["Completed", "38"],
-      ["Pending Review", "5"],
-      ["Compliance", "100%"],
+      ["Open Items", "0"],
+      ["Completed", "0"],
+      ["Pending Review", "0"],
+      ["Account", "Ready"],
     ],
     items: [
       "Overview and activity",
@@ -90,6 +104,23 @@ export default function OperationalPage({ title }) {
       "Approvals and comments",
     ],
   };
+  const kpis =
+    title === "Scale-Up" && user.role === "government"
+      ? [
+          ["Solutions Scaled", summary?.scaledPilots ?? "—"],
+          ["Active Pilots", summary?.activePilots ?? "—"],
+          ["Current Deployment", summary?.scaledPilots ? "In progress" : "Not started"],
+          ["Projected Users", "Not calculated"],
+          ["Annual Savings", "Not calculated"],
+        ]
+      : title === "Company Profile" && user.role === "startup"
+        ? [
+            ["Profile Status", user.startupProfile?.profileStatus || "Incomplete"],
+            ["Capabilities", user.startupProfile?.capabilityTags?.length || 0],
+            ["Certifications", user.startupProfile?.certifications?.length || 0],
+            ["Deployments", user.startupProfile?.previousDeployments?.length || 0],
+          ]
+        : d.kpis;
   return (
     <main className="page">
       <header className="page-head">
@@ -104,7 +135,7 @@ export default function OperationalPage({ title }) {
         <button className="btn btn-primary">＋ New action</button>
       </header>
       <div className="metrics">
-        {d.kpis.map(([a, b]) => (
+        {kpis.map(([a, b]) => (
           <div className="metric" key={a}>
             <div className="metric-label">{a}</div>
             <div className="metric-value">{b}</div>
@@ -112,6 +143,54 @@ export default function OperationalPage({ title }) {
           </div>
         ))}
       </div>
+      {title === "Company Profile" && user.role === "startup" && (
+        <section className="card mt-5">
+          <p className="eyebrow">Matching evidence</p>
+          <h2 className="mt-2 text-xl font-bold text-[#0b1f3a]">
+            {user.name}
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-[#667085]">
+            {user.startupProfile?.productDescription || "Product description is not available."}
+          </p>
+          <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
+            {[
+              ["Domain", user.startupProfile?.domain],
+              ["Prototype stage", user.startupProfile?.prototypeStage],
+              ["Deployment type", user.startupProfile?.deploymentType],
+              ["Team size", user.startupProfile?.teamSize],
+              ["Funding stage", user.startupProfile?.fundingStage],
+              ["Implementation timeline", user.startupProfile?.implementationWeeks ? `${user.startupProfile.implementationWeeks} weeks` : ""],
+              ["Past projects", user.startupProfile?.pastProjects],
+              ["Impact evidence", user.startupProfile?.impactMetrics?.join("; ")],
+              ["Government projects", user.startupProfile?.governmentProjects?.join("; ") || "No government deployment claimed"],
+              ["Customer base", user.startupProfile?.customerBase],
+            ].map(([label, value]) => (
+              <div key={label}>
+                <p className="form-label">{label}</p>
+                <p className="text-sm text-[#344054]">{value || "Not provided"}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-5 border-t border-[#eaecf0] pt-5">
+            <p className="form-label">Capabilities used for recommendations</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {(user.startupProfile?.capabilityTags || []).map((capability) => (
+                <span className="badge blue" key={capability}>{capability}</span>
+              ))}
+            </div>
+          </div>
+          <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
+            <div>
+              <p className="form-label">Certifications</p>
+              <p className="text-sm text-[#344054]">{user.startupProfile?.certifications?.join(", ") || "Not provided"}</p>
+            </div>
+            <div>
+              <p className="form-label">Security and integration</p>
+              <p className="text-sm text-[#344054]">{[...(user.startupProfile?.securityCompliance || []), ...(user.startupProfile?.integrationCapabilities || [])].join(", ") || "Not provided"}</p>
+            </div>
+          </div>
+        </section>
+      )}
       <section className="card mt-5">
         <div className="mb-5 flex flex-wrap gap-3">
           <input

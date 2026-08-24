@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "node --watch src/server.js"
+    "dev": "node --watch src/server.js",
+    "seed:startups": "node src/seed/seedStartups.js",
+    "seed:demo-users": "node src/seed/seedDemoUsers.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",

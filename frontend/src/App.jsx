@@ -61,7 +61,10 @@ export default function App() {
             <Route element={<AppShell />}>
               <Route path="/dashboard" element={<AccountHome />} />
               <Route path="/matching" element={<AIMatching />} />
-              <Route path="/recommendations" element={<BrowseChallenges />} />
+              <Route
+                path="/recommendations"
+                element={<BrowseChallenges personalized />}
+              />
               <Route path="/pilots" element={<PilotList />} />
               <Route path="/pilots/:pilotId" element={<PilotDetail />} />
               <Route
