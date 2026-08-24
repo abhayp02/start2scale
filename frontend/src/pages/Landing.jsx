@@ -102,7 +102,7 @@ export default function Landing() {
         </div>
       </main>
       <footer className="public-footer">
-        <div><b>Start2Scale</b><span>Secure, transparent innovation procurement</span></div>
+        <div><b>Start2Scale</b><span>Secure, transparent innovation procurement<br/> Made By Team @Kaustubh💎</span></div>
         <Link className="admin-portal-link" to="/admin/login">
           <span className="admin-link-icon">◇</span>
           <span><small>RESTRICTED ACCESS</small><b>Platform Admin</b></span>
