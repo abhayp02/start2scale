@@ -18,6 +18,7 @@ function publicUser(user) {
     role: user.role,
     departmentName: user.departmentName,
     governmentProfile: user.governmentProfile,
+    evaluatorProfile: user.evaluatorProfile,
     startupProfile: user.startupProfile,
     emailVerified: user.emailVerified,
     accountStatus: user.accountStatus,

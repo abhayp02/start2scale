@@ -20,20 +20,61 @@ async function login(email) {
   return data.user;
 }
 
-const startupUsers = [];
-for (let index = 0; index < emails.length; index += 10) {
-  startupUsers.push(...(await Promise.all(emails.slice(index, index + 10).map(login))));
+let startupUsers = [];
+try {
+  const adminLogin = await fetch("http://localhost:5000/api/auth/admin/login", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ email: "admin@scale2start.demo", password: "Demo@1234" }),
+  });
+  const adminAuth = await adminLogin.json();
+  if (adminLogin.ok) {
+    const usersResponse = await fetch(
+      "http://localhost:5000/api/admin/users?role=startup",
+      { headers: { authorization: `Bearer ${adminAuth.token}` } },
+    );
+    const usersData = await usersResponse.json();
+    if (usersResponse.ok) {
+      startupUsers = usersData.users.filter((user) => user.email.endsWith(".demo"));
+    }
+  }
+} catch {
+  // Fall through to credential-based profile loading.
+}
+
+if (!startupUsers.length) {
+  for (let index = 0; index < emails.length; index += 10) {
+    startupUsers.push(...(await Promise.all(emails.slice(index, index + 10).map(login))));
+  }
 }
 
 const governmentEmails = [
   "procurement@scale2start.gov.in",
   "innovation@agriculture.gov.in",
   "procurement@health.gov.in",
+  "modernization@revenue.gov.in",
+  "innovation@transport.gov.in",
+  "innovation@water.gov.in",
+  "digital@education.gov.in",
 ];
 const governmentUsers = await Promise.all(governmentEmails.map(login));
+const evaluatorEmails = [
+  "ananya.evaluator@scale2start.gov.in",
+  "rohan.evaluator@scale2start.gov.in",
+  "meera.evaluator@agriculture.gov.in",
+  "arjun.evaluator@health.gov.in",
+  "kavita.evaluator@revenue.gov.in",
+  "vikram.evaluator@transport.gov.in",
+  "neha.evaluator@water.gov.in",
+  "sanjay.evaluator@energy.gov.in",
+  "priya.evaluator@education.gov.in",
+  "farhan.evaluator@environment.gov.in",
+];
+const evaluatorUsers = await Promise.all(evaluatorEmails.map(login));
 
 const workbook = await SpreadsheetFile.importXlsx(await FileBlob.load(workbookPath));
 const governmentSheet = workbook.worksheets.add("Government Profiles");
+const evaluatorSheet = workbook.worksheets.add("Evaluator Profiles");
 const startupSheet = workbook.worksheets.add("Startup Profiles");
 
 const navy = "#0B1F3A";
@@ -99,6 +140,42 @@ governmentSheet.getRange(`A5:I${governmentRows.length + 4}`).format.rowHeight = 
 governmentSheet.freezePanes.freezeRows(4);
 
 addTitle(
+  evaluatorSheet,
+  "Scale2Start — Evaluator Professional Profiles",
+  "Expertise and capacity information used by government officers when assigning independent evaluations.",
+  "H",
+);
+
+const evaluatorRows = evaluatorUsers.map((user) => [
+  user.name,
+  user.email,
+  user.departmentName,
+  user.evaluatorProfile?.expertiseDomains?.join(", ") || "",
+  user.evaluatorProfile?.professionalCertifications?.join(", ") || "",
+  user.evaluatorProfile?.yearsOfExperience || 0,
+  user.evaluatorProfile?.currentCapacity || 0,
+  user.evaluatorProfile?.bio || "",
+]);
+evaluatorSheet.getRange("A4:H4").values = [[
+  "Name", "Email", "Department", "Expertise Domains", "Certifications",
+  "Experience (Years)", "Assignment Capacity", "Professional Summary",
+]];
+evaluatorSheet.getRange(`A5:H${evaluatorRows.length + 4}`).values = evaluatorRows;
+const evaluatorTable = evaluatorSheet.tables.add(
+  `A4:H${evaluatorRows.length + 4}`,
+  true,
+  "EvaluatorProfileTable",
+);
+evaluatorTable.style = "TableStyleMedium2";
+evaluatorSheet.getRange(`A4:H${evaluatorRows.length + 4}`).format.wrapText = true;
+evaluatorSheet.getRange(`A5:H${evaluatorRows.length + 4}`).format.rowHeight = 48;
+evaluatorSheet.getRange(`F5:G${evaluatorRows.length + 4}`).format.numberFormat = "#,##0";
+[24, 38, 30, 42, 40, 18, 20, 52].forEach((width, column) => {
+  evaluatorSheet.getRangeByIndexes(0, column, evaluatorRows.length + 4, 1).format.columnWidth = width;
+});
+evaluatorSheet.freezePanes.freezeRows(4);
+
+addTitle(
   startupSheet,
   "Scale2Start — Startup Matching Profiles",
   "These structured fields are used for capability recommendations and government-side AI candidate ranking.",
@@ -160,7 +237,7 @@ readMe.getRange("A19:F19").format = {
 };
 readMe.mergeCells("A20:F21");
 readMe.getRange("A20").values = [[
-  "Use Government Profiles and Startup Profiles to inspect the structured information now used for relevance filtering, recommendation explanations and AI candidate ranking.",
+  "Use Government Profiles, Evaluator Profiles and Startup Profiles to inspect the structured information used for assignment, relevance filtering, recommendation explanations and AI candidate ranking.",
 ]];
 readMe.getRange("A20:F21").format = {
   wrapText: true,
@@ -191,6 +268,7 @@ for (const sheetName of [
   "Evaluators",
   "Startups",
   "Government Profiles",
+  "Evaluator Profiles",
   "Startup Profiles",
 ]) {
   const preview = await workbook.render({
@@ -207,4 +285,4 @@ for (const sheetName of [
 
 const output = await SpreadsheetFile.exportXlsx(workbook);
 await output.save(workbookPath);
-console.log(JSON.stringify({ output: workbookPath, governmentProfiles: governmentRows.length, startupProfiles: startupRows.length }));
+console.log(JSON.stringify({ output: workbookPath, governmentProfiles: governmentRows.length, evaluatorProfiles: evaluatorRows.length, startupProfiles: startupRows.length }));

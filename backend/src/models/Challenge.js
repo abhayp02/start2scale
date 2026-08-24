@@ -24,6 +24,21 @@ const challengeSchema = new mongoose.Schema({
     enum: ["draft", "published", "closed"],
     default: "draft",
   },
+  aiMatchAnalysis: {
+    model: String,
+    generatedAt: Date,
+    requirementsSnapshot: mongoose.Schema.Types.Mixed,
+    analyzedCount: Number,
+    candidateCount: Number,
+    matches: [
+      {
+        startupId: String,
+        startupName: String,
+        matchScore: Number,
+        explanation: String,
+      },
+    ],
+  },
   createdAt: { type: Date, default: Date.now },
 });
 

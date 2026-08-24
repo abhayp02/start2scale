@@ -8,17 +8,52 @@ const seedSource = await fs.readFile(
   "utf8",
 );
 
-const startupRows = [...seedSource.matchAll(
+let startupRows = [...seedSource.matchAll(
   /\[\s*"([^"]+)"\s*,\s*"([^"]+@[^"\s]+)"\s*,\s*"([^"]+)"/g,
 )]
   .map((match) => ({ name: match[1], email: match[2], domain: match[3] }))
   .filter((startup) => startup.email.endsWith(".demo"))
   .sort((a, b) => a.domain.localeCompare(b.domain) || a.name.localeCompare(b.name));
 
+try {
+  const loginResponse = await fetch("http://localhost:5000/api/auth/admin/login", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      email: "admin@scale2start.demo",
+      password: "Demo@1234",
+    }),
+  });
+  const loginData = await loginResponse.json();
+  if (loginResponse.ok) {
+    const usersResponse = await fetch(
+      "http://localhost:5000/api/admin/users?role=startup",
+      { headers: { authorization: `Bearer ${loginData.token}` } },
+    );
+    const usersData = await usersResponse.json();
+    if (usersResponse.ok) {
+      startupRows = usersData.users
+        .filter((user) => user.email.endsWith(".demo"))
+        .map((user) => ({
+          name: user.name,
+          email: user.email,
+          domain: user.startupProfile?.domain || "Not specified",
+        }))
+        .sort((a, b) => a.domain.localeCompare(b.domain) || a.name.localeCompare(b.name));
+    }
+  }
+} catch {
+  // The source-derived list remains available when the local API is offline.
+}
+
 const governmentUsers = [
   ["Government", "Procurement Officer", "procurement@scale2start.gov.in", "Demo@1234", "Department of Urban Development", "http://localhost:5173/government/login", "Existing populated procurement demo"],
   ["Government", "Agriculture Innovation Officer", "innovation@agriculture.gov.in", "Demo@1234", "Department of Agriculture", "http://localhost:5173/government/login", "Clean government demo account"],
   ["Government", "Health Procurement Officer", "procurement@health.gov.in", "Demo@1234", "Department of Health", "http://localhost:5173/government/login", "Clean government demo account"],
+  ["Government", "Revenue Modernization Officer", "modernization@revenue.gov.in", "Demo@1234", "Department of Revenue", "http://localhost:5173/government/login", "Complete land-records and revenue demo profile"],
+  ["Government", "Transport Technology Officer", "innovation@transport.gov.in", "Demo@1234", "Department of Transport", "http://localhost:5173/government/login", "Complete transport innovation demo profile"],
+  ["Government", "Water Innovation Officer", "innovation@water.gov.in", "Demo@1234", "Department of Water Resources", "http://localhost:5173/government/login", "Complete water-resource innovation demo profile"],
+  ["Government", "Education Digital Transformation Officer", "digital@education.gov.in", "Demo@1234", "Department of School Education", "http://localhost:5173/government/login", "Complete education transformation demo profile"],
 ];
 
 const evaluatorUsers = [
@@ -26,6 +61,12 @@ const evaluatorUsers = [
   ["Evaluator", "Rohan Verma", "rohan.evaluator@scale2start.gov.in", "Demo@1234", "Department of Urban Development", "http://localhost:5173/government/login", "Available for Urban Development assignments"],
   ["Evaluator", "Meera Iyer", "meera.evaluator@agriculture.gov.in", "Demo@1234", "Department of Agriculture", "http://localhost:5173/government/login", "Available for Agriculture assignments"],
   ["Evaluator", "Dr Arjun Rao", "arjun.evaluator@health.gov.in", "Demo@1234", "Department of Health", "http://localhost:5173/government/login", "Available for Health assignments"],
+  ["Evaluator", "Kavita Sharma", "kavita.evaluator@revenue.gov.in", "Demo@1234", "Department of Revenue", "http://localhost:5173/government/login", "Available for Land Records assignments"],
+  ["Evaluator", "Vikram Singh", "vikram.evaluator@transport.gov.in", "Demo@1234", "Department of Transport", "http://localhost:5173/government/login", "Available for Transport assignments"],
+  ["Evaluator", "Neha Kulkarni", "neha.evaluator@water.gov.in", "Demo@1234", "Department of Water Resources", "http://localhost:5173/government/login", "Water quality, sensors and infrastructure specialist"],
+  ["Evaluator", "Sanjay Deshmukh", "sanjay.evaluator@energy.gov.in", "Demo@1234", "Department of Energy", "http://localhost:5173/government/login", "Energy systems and smart-grid specialist"],
+  ["Evaluator", "Priya Nair", "priya.evaluator@education.gov.in", "Demo@1234", "Department of School Education", "http://localhost:5173/government/login", "Learning outcomes and accessibility specialist"],
+  ["Evaluator", "Farhan Ali", "farhan.evaluator@environment.gov.in", "Demo@1234", "Department of Environment", "http://localhost:5173/government/login", "Environmental monitoring and GIS specialist"],
 ];
 
 const startupUsers = startupRows.map((startup) => [
@@ -150,9 +191,9 @@ summary.getRange("A3:F4").format = {
 
 summary.getRange("A6:B6").values = [["Account type", "Seeded accounts"]];
 summary.getRange("A7:A9").values = [["Government"], ["Evaluator"], ["Startup"]];
-summary.getRange("B7").formulas = [["=COUNTA('Government'!A5:A100)"]];
-summary.getRange("B8").formulas = [["=COUNTA('Evaluators'!A5:A100)"]];
-summary.getRange("B9").formulas = [["=COUNTA('Startups'!A5:A100)"]];
+summary.getRange("B7").formulas = [["=COUNTA('Government'!A5:A200)"]];
+summary.getRange("B8").formulas = [["=COUNTA('Evaluators'!A5:A200)"]];
+summary.getRange("B9").formulas = [["=COUNTA('Startups'!A5:A200)"]];
 summary.getRange("A6:B9").format.borders = {
   preset: "all",
   style: "thin",

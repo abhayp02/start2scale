@@ -53,6 +53,17 @@ const governmentProfileSchema = new mongoose.Schema(
   { _id: false },
 );
 
+const evaluatorProfileSchema = new mongoose.Schema(
+  {
+    expertiseDomains: [String],
+    professionalCertifications: [String],
+    yearsOfExperience: Number,
+    currentCapacity: Number,
+    bio: String,
+  },
+  { _id: false },
+);
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -77,6 +88,7 @@ const userSchema = new mongoose.Schema({
   },
   departmentName: String,
   governmentProfile: governmentProfileSchema,
+  evaluatorProfile: evaluatorProfileSchema,
   startupProfile: startupProfileSchema,
   emailVerified: {
     type: Boolean,

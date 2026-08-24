@@ -8,6 +8,10 @@ export default function AIMatching() {
   const [matches, setMatches] = useState([]);
   const [analyzedCount, setAnalyzedCount] = useState(0);
   const [candidateCount, setCandidateCount] = useState(0);
+  const [matchingMode, setMatchingMode] = useState("");
+  const [aiWarning, setAiWarning] = useState("");
+  const [model, setModel] = useState("");
+  const [generatedAt, setGeneratedAt] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const id = params.get("challenge") || "";
@@ -30,12 +34,20 @@ export default function AIMatching() {
     setMatches([]);
     setAnalyzedCount(0);
     setCandidateCount(0);
+    setMatchingMode("");
+    setAiWarning("");
+    setModel("");
+    setGeneratedAt("");
     api
       .get(`/challenges/${id}/matches`)
       .then((r) => {
         setMatches(r.data.matches);
         setAnalyzedCount(r.data.analyzedCount || 0);
         setCandidateCount(r.data.candidateCount || 0);
+        setMatchingMode(r.data.matchingMode || "gemini");
+        setAiWarning(r.data.aiWarning || "");
+        setModel(r.data.model || "");
+        setGeneratedAt(r.data.generatedAt || "");
       })
       .catch((e) => {
         setAnalyzedCount(e.response?.data?.analyzedCount || 0);
@@ -70,7 +82,13 @@ export default function AIMatching() {
       </header>
       {challenge && (
         <section className="ai-panel">
-          <p className="eyebrow !text-[#90b4ff]">✦ Gemini matching engine</p>
+          <p className="eyebrow !text-[#90b4ff]">
+            ✦ {matchingMode === "capability-fallback"
+              ? "Capability matching engine"
+              : matchingMode === "cached-gemini"
+                ? "Audited Gemini analysis"
+                : "Gemini matching engine"}
+          </p>
           <h2>{challenge.requirements?.domain || "Government challenge"}</h2>
           <div className="mt-4 flex flex-wrap gap-2">
             {Object.entries(challenge.requirements || {})
@@ -95,6 +113,11 @@ export default function AIMatching() {
               <span>RANKED MATCHES</span>
             </div>
           </div>
+          {model && generatedAt && (
+            <p className="mt-4 text-xs text-[#90b4ff]">
+              Model: {model} · Generated {new Date(generatedAt).toLocaleString()}
+            </p>
+          )}
         </section>
       )}
       {loading && (
@@ -103,6 +126,14 @@ export default function AIMatching() {
         </div>
       )}
       {error && <div className="card mt-5 text-[#b42318]">{error}</div>}
+      {aiWarning && (
+        <div className="card mt-5 border border-[#fedf89] bg-[#fffaeb] text-[#b54708]">
+          <b>AI service notice:</b>{" "}
+          {matchingMode === "cached-gemini"
+            ? "Live Gemini is temporarily unavailable. This is the last successful timestamped Gemini analysis stored for continuity and auditability."
+            : "Gemini is temporarily unavailable. Scale2Start generated a transparent capability-based ranking that is not represented as AI output."}
+        </div>
+      )}
       <div className="grid2">
         {" "}
         <section>
@@ -134,9 +165,11 @@ export default function AIMatching() {
                 {matches[0].explanation}
               </p>
               <div className="mt-4 rounded-lg bg-[#fffaeb] p-3 text-xs text-[#b54708]">
-                AI-generated recommendation. Validate certifications,
-                deployments, pricing and integration evidence before
-                shortlisting.
+                {matchingMode === "capability-fallback"
+                  ? "Fallback recommendation generated from structured profile evidence. Gemini did not produce these results."
+                  : matchingMode === "cached-gemini"
+                    ? "Previously generated Gemini recommendation retained with its model and timestamp for auditability."
+                    : "AI-generated recommendation. Validate certifications, deployments, pricing and integration evidence before shortlisting."}
               </div>
             </Card>
           </aside>

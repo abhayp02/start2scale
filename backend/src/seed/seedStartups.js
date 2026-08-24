@@ -281,6 +281,173 @@ const additionalStartups = [
   }),
 );
 
+const expansionDomains = [
+  {
+    domain: "Waste Management",
+    names: ["RecycleNet India", "BinOptix", "CleanLoop Systems", "SegregateIQ"],
+    technology: ["Computer Vision", "IoT Sensors", "Route Optimization"],
+    outcome: "Municipal waste monitoring and collection optimization",
+    accuracy: "90% operational event classification accuracy",
+  },
+  {
+    domain: "Agriculture",
+    names: ["FasalLogic", "AgroPulse Labs", "CropSetu", "KhetVision"],
+    technology: ["Machine Learning", "Satellite Imagery", "Mobile Apps"],
+    outcome: "Crop monitoring and farmer decision-support pilot",
+    accuracy: "88% crop-risk classification accuracy",
+  },
+  {
+    domain: "Healthcare",
+    names: ["SwasthAI Labs", "ClinicBridge", "MediGrid India", "AarogyaSense"],
+    technology: ["Clinical Analytics", "FHIR", "Telemedicine"],
+    outcome: "Digital health workflow pilot across public health facilities",
+    accuracy: "91% structured health-record completeness",
+  },
+  {
+    domain: "Urban Governance",
+    names: ["UrbanStack", "NagarSetu", "CivicGrid AI", "CityMetric Labs"],
+    technology: ["GIS", "Workflow Automation", "Predictive Analytics"],
+    outcome: "Municipal service delivery and planning deployment",
+    accuracy: "87% service-demand forecasting accuracy",
+  },
+  {
+    domain: "Water Resources",
+    names: ["AquaGrid India", "JalDrishti", "WaterWatch Labs", "NeerSense"],
+    technology: ["IoT Sensors", "GIS", "Predictive Analytics"],
+    outcome: "Water quality and distribution monitoring pilot",
+    accuracy: "93% sensor data availability",
+  },
+  {
+    domain: "Education",
+    names: ["EduReach AI", "ShikshaGrid", "LearnSetu", "ClassroomIQ"],
+    technology: ["Adaptive Learning", "NLP", "Learning Analytics"],
+    outcome: "Digital learning deployment across government schools",
+    accuracy: "18% improvement in measured learning outcomes",
+  },
+  {
+    domain: "Land Records",
+    names: ["BhoomiScan", "RecordGrid", "PattaAI", "LandMap Systems"],
+    technology: ["OCR", "Document AI", "GIS"],
+    outcome: "Legacy record digitization and parcel verification pilot",
+    accuracy: "92% structured land-record extraction accuracy",
+  },
+  {
+    domain: "Transport",
+    names: ["MobilityStack", "RouteSetu", "TransitLens", "SadakAI"],
+    technology: ["GPS Analytics", "Route Optimization", "Computer Vision"],
+    outcome: "Public transport and road operations optimization",
+    accuracy: "20% improvement in operational efficiency",
+  },
+  {
+    domain: "Energy",
+    names: ["UrjaLogic", "PowerPulse AI", "GridSetu", "EnergyLens India"],
+    technology: ["IoT", "Predictive Maintenance", "Anomaly Detection"],
+    outcome: "Distribution asset monitoring and energy analytics pilot",
+    accuracy: "89% early anomaly detection accuracy",
+  },
+  {
+    domain: "Public Safety",
+    names: ["SurakshaVision", "AlertGrid", "ResponseSetu", "SafeOps AI"],
+    technology: ["Computer Vision", "Emergency Alerts", "GIS"],
+    outcome: "Public safety monitoring and emergency response pilot",
+    accuracy: "90% incident detection precision",
+  },
+  {
+    domain: "Environment",
+    names: ["EcoMetric AI", "ClimateGrid", "GreenWatch Labs", "ParyavaranIQ"],
+    technology: ["Satellite Imagery", "IoT Sensors", "Environmental Analytics"],
+    outcome: "Environmental monitoring across government-managed sites",
+    accuracy: "91% environmental event detection accuracy",
+  },
+  {
+    domain: "Social Welfare",
+    names: ["JanKalyan Tech", "BenefitGrid", "SamajSetu", "CitizenReach AI"],
+    technology: ["Rules Engine", "NLP", "Workflow Automation"],
+    outcome: "Citizen benefit delivery and outreach automation pilot",
+    accuracy: "94% benefit-rule processing accuracy",
+  },
+];
+
+const scaledDemoStartups = expansionDomains.flatMap((group, groupIndex) =>
+  group.names.map((name, index) => ({
+    name,
+    email: `demo@${name.toLowerCase().replace(/[^a-z0-9]/g, "")}.demo`,
+    startupProfile: {
+      domain: group.domain,
+      technology: group.technology,
+      pastProjects: `${group.outcome} covering ${index + 1} district${index ? "s" : ""}`,
+      accuracyClaims: group.accuracy,
+      deploymentType: index % 2 === 0 ? "Edge + Cloud" : "Cloud + Mobile",
+      teamSize: 8 + ((groupIndex * 3 + index * 4) % 19),
+      isRegisteredEntity: true,
+      prototypeStage: index === 3 ? "prototype" : "deployed",
+    },
+  })),
+);
+
+const completeStartupProfiles = [
+  {
+    name: "Prithvi Circular Technologies",
+    email: "demo@prithvicircular.demo",
+    startupProfile: {
+      domain: "Waste Management",
+      technology: ["Computer Vision", "Edge AI", "IoT Sensors", "Route Optimization", "Data Analytics"],
+      pastProjects: "Deployed smart segregation and collection analytics across 6 municipal wards, 14 material recovery facilities and 210 collection vehicles",
+      accuracyClaims: "95.2% waste-category precision, 97.4% device uptime and 26% reduction in collection kilometres during validated pilots",
+      deploymentType: "Edge + India-region Cloud + Mobile",
+      teamSize: 32,
+      isRegisteredEntity: true,
+      prototypeStage: "deployed",
+      companyRegistrationNumber: "S2S-DEMO-PRITHVI-001",
+      productDescription: "Integrated municipal solid-waste platform combining camera-based segregation quality checks, smart-bin telemetry, fleet routing and ward-level command dashboards.",
+      capabilityTags: ["AI", "Computer Vision", "IoT", "Route Optimization", "Waste Management", "Smart Cities", "ESG Analytics"],
+      industriesServed: ["Municipal Government", "Waste Management", "Smart Cities", "Industrial Campuses"],
+      certifications: ["Startup India Recognized", "ISO 27001", "ISO 9001", "GeM Registered"],
+      previousDeployments: ["Six-ward municipal collection optimization", "Fourteen-facility segregation analytics", "Smart-bin monitoring at 320 public locations"],
+      governmentProjects: ["Municipal Corporation waste command centre pilot", "District sanitation fleet optimization program"],
+      customerBase: "2 municipal corporations, 3 private waste operators and 8 institutional campuses",
+      impactMetrics: ["26% fewer collection kilometres", "34% improvement in segregation compliance", "18% lower fuel cost", "97.4% device uptime"],
+      fundingStage: "Series A",
+      integrationCapabilities: ["REST API", "GIS layers", "Vehicle GPS systems", "Weighbridge integration", "CSV/SFTP exchange", "Single sign-on"],
+      securityCompliance: ["ISO 27001 controls", "Encryption at rest and in transit", "Role-based access control", "India data residency", "Quarterly vulnerability assessment"],
+      geographicAvailability: ["Pan India", "On-site implementation in Tier-1, Tier-2 and Tier-3 cities", "Hindi and 5 regional languages"],
+      pilotBudgetMin: 1800000,
+      pilotBudgetMax: 6500000,
+      implementationWeeks: 6,
+    },
+  },
+  {
+    name: "JanSwasthya Intelligence",
+    email: "demo@janswasthyaintelligence.demo",
+    startupProfile: {
+      domain: "Healthcare",
+      technology: ["Clinical NLP", "FHIR", "Predictive Analytics", "Telemedicine", "Regional Language ASR"],
+      pastProjects: "Implemented assisted patient intake, referral prioritization and population-health dashboards across 22 primary health centres and 3 district hospitals",
+      accuracyClaims: "92.8% structured extraction accuracy, 89% referral-risk sensitivity and 99.1% platform availability in public-health deployments",
+      deploymentType: "On-premise + India-region Cloud + Offline Mobile",
+      teamSize: 28,
+      isRegisteredEntity: true,
+      prototypeStage: "deployed",
+      companyRegistrationNumber: "S2S-DEMO-JSI-002",
+      productDescription: "Public-health intelligence suite for multilingual patient intake, standards-based clinical integration, referral triage and program-level outcome monitoring.",
+      capabilityTags: ["AI", "Clinical NLP", "FHIR", "Telemedicine", "Health Analytics", "Regional Languages", "Offline First"],
+      industriesServed: ["Public Healthcare", "District Hospitals", "Primary Health Centres", "Health Missions"],
+      certifications: ["Startup India Recognized", "ISO 27001", "ISO 13485 Ready", "ABDM Sandbox Integrated"],
+      previousDeployments: ["Twenty-two PHC assisted-intake rollout", "District referral analytics pilot", "Maternal-health follow-up dashboard"],
+      governmentProjects: ["State health mission multilingual intake pilot", "District hospital referral prioritization deployment"],
+      customerBase: "1 state health mission, 3 district hospitals, 22 primary health centres and 2 nonprofit health networks",
+      impactMetrics: ["41% reduction in registration time", "23% improvement in completed referrals", "99.1% platform availability", "Four supported Indian languages"],
+      fundingStage: "Seed",
+      integrationCapabilities: ["FHIR R4", "ABDM-compatible APIs", "HL7 adapters", "REST API", "CSV import", "Offline synchronization"],
+      securityCompliance: ["ISO 27001 controls", "Consent-aware access", "Encryption at rest and in transit", "India data residency", "Audit logging", "Least-privilege roles"],
+      geographicAvailability: ["India", "Rural and low-connectivity deployment", "English, Hindi, Marathi and Kannada"],
+      pilotBudgetMin: 1500000,
+      pilotBudgetMax: 5500000,
+      implementationWeeks: 8,
+    },
+  },
+];
+
 function enrichStartupProfile(startup) {
   const profile = startup.startupProfile;
   const deployed = profile.prototypeStage === "deployed";
@@ -289,37 +456,42 @@ function enrichStartupProfile(startup) {
     ...startup,
     startupProfile: {
       ...profile,
-      productDescription: `${startup.name} provides ${profile.domain.toLowerCase()} solutions using ${profile.technology.join(", ")}.`,
-      capabilityTags: [...new Set([...profile.technology, profile.domain])],
-      industriesServed: [profile.domain, "Government"],
-      certifications: deployed
+      productDescription: profile.productDescription || `${startup.name} provides ${profile.domain.toLowerCase()} solutions using ${profile.technology.join(", ")}.`,
+      capabilityTags: profile.capabilityTags || [...new Set([...profile.technology, profile.domain])],
+      industriesServed: profile.industriesServed || [profile.domain, "Government"],
+      certifications: profile.certifications || (deployed
         ? ["Startup India Recognized", "ISO 27001 Ready"]
-        : ["Startup India Recognized"],
-      previousDeployments: [profile.pastProjects],
-      governmentProjects: profile.pastProjects.toLowerCase().includes("government") ||
+        : ["Startup India Recognized"]),
+      previousDeployments: profile.previousDeployments || [profile.pastProjects],
+      governmentProjects: profile.governmentProjects || (profile.pastProjects.toLowerCase().includes("government") ||
         profile.pastProjects.toLowerCase().includes("district") ||
         profile.pastProjects.toLowerCase().includes("municipal") ||
         profile.pastProjects.toLowerCase().includes("state")
           ? [profile.pastProjects]
-          : [],
-      customerBase: deployed
+          : []),
+      customerBase: profile.customerBase || (deployed
         ? "Government departments, public institutions and enterprise customers"
-        : "Pilot customers and early adopters",
-      impactMetrics: [profile.accuracyClaims],
-      fundingStage: profile.teamSize >= 15 ? "Seed / Growth" : "Bootstrapped / Pre-seed",
-      integrationCapabilities: ["REST API", "CSV data exchange", "Role-based dashboard"],
-      securityCompliance: ["Encryption in transit", "Role-based access control", "India data residency supported"],
-      geographicAvailability: ["India", "Remote deployment support"],
-      pilotBudgetMin: profile.teamSize >= 15 ? 1000000 : 500000,
-      pilotBudgetMax: profile.teamSize >= 15 ? 5000000 : 2500000,
-      implementationWeeks: deployed ? 8 : 12,
+        : "Pilot customers and early adopters"),
+      impactMetrics: profile.impactMetrics || [profile.accuracyClaims],
+      fundingStage: profile.fundingStage || (profile.teamSize >= 15 ? "Seed / Growth" : "Bootstrapped / Pre-seed"),
+      integrationCapabilities: profile.integrationCapabilities || ["REST API", "CSV data exchange", "Role-based dashboard"],
+      securityCompliance: profile.securityCompliance || ["Encryption in transit", "Role-based access control", "India data residency supported"],
+      geographicAvailability: profile.geographicAvailability || ["India", "Remote deployment support"],
+      pilotBudgetMin: profile.pilotBudgetMin || (profile.teamSize >= 15 ? 1000000 : 500000),
+      pilotBudgetMax: profile.pilotBudgetMax || (profile.teamSize >= 15 ? 5000000 : 2500000),
+      implementationWeeks: profile.implementationWeeks || (deployed ? 8 : 12),
     },
   };
 }
 
 export default async function seedStartups() {
   const passwordHash = await bcrypt.hash(DEMO_PASSWORD, 10);
-  const startupCatalog = [...startups, ...additionalStartups].map(
+  const startupCatalog = [
+    ...startups,
+    ...additionalStartups,
+    ...scaledDemoStartups,
+    ...completeStartupProfiles,
+  ].map(
     enrichStartupProfile,
   );
   for (const startup of startupCatalog)

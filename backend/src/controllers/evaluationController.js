@@ -11,7 +11,7 @@ export async function listEvaluators(req, res) {
     };
     if (req.user.departmentName) filter.departmentName = req.user.departmentName;
     const evaluators = await User.find(filter)
-      .select("name email departmentName")
+      .select("name email departmentName evaluatorProfile")
       .sort({ name: 1 });
     return res.json({ evaluators });
   } catch {

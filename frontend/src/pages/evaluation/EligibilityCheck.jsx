@@ -185,6 +185,9 @@ export default function EligibilityCheck() {
                           {evaluators.map((evaluator) => (
                             <option value={evaluator._id} key={evaluator._id}>
                               {evaluator.name}
+                              {evaluator.evaluatorProfile?.expertiseDomains?.length
+                                ? ` — ${evaluator.evaluatorProfile.expertiseDomains.join(", ")}`
+                                : ""}
                             </option>
                           ))}
                         </select>
