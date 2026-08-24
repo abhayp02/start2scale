@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   apply,
   challengeApplications,
+  getApplication,
   myApplications,
   runEligibility,
   shortlist,
@@ -10,6 +11,7 @@ import { authenticate, authorizeRoles } from "../middleware/auth.js";
 const router = Router();
 router.use(authenticate);
 router.get("/mine", authorizeRoles("startup"), myApplications);
+router.get("/:id", getApplication);
 router.get(
   "/challenge/:challengeId",
   authorizeRoles("government", "evaluator", "admin"),

@@ -1,13 +1,54 @@
 import Pilot from "../models/Pilot.js";
 import Grievance from "../models/Grievance.js";
 import KPIRecord from "../models/KPIRecord.js";
+import Application from "../models/Application.js";
 import { analyzeKPIProgress } from "../services/aiService.js";
 
 export async function createPilot(req, res) {
   try {
-    const pilot = await Pilot.create(req.body);
+    const { applicationId, district, kpis, startDate, endDate } = req.body;
+
+    if (!applicationId) {
+      return res.status(400).json({ message: "Application ID is required" });
+    }
+
+    const application =
+      await Application.findById(applicationId).populate("challengeId");
+
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    if (application.status !== "shortlisted") {
+      return res.status(400).json({
+        message: "Only shortlisted applications can progress to a pilot",
+      });
+    }
+
+    if (
+      req.user.role === "government" &&
+      application.challengeId.createdBy.toString() !== req.user._id.toString()
+    ) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    const pilot = await Pilot.create({
+      challengeId: application.challengeId._id,
+      startupId: application.startupId,
+      district,
+      kpis,
+      startDate,
+      endDate,
+      status: "active",
+    });
+
     return res.status(201).json({ pilot });
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(409).json({
+        message: "A pilot already exists for this startup and challenge",
+      });
+    }
     return res.status(400).json({ message: error.message });
   }
 }

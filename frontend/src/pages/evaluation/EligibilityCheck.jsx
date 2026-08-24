@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../../services/api.js";
 import { useAuth } from "../../context/AuthContext.jsx";
 import StatusBadge from "../../components/StatusBadge.jsx";
@@ -40,6 +41,28 @@ export default function EligibilityCheck() {
       setError("");
     } catch (e) {
       setError(e.response?.data?.message || "Eligibility check failed.");
+    }
+  }
+
+  async function shortlist(id) {
+    try {
+      const response = await api.patch(`/applications/${id}/shortlist`, {});
+      setApps((items) =>
+        items.map((application) =>
+          application._id === id
+            ? {
+                ...response.data.application,
+                startupId: application.startupId,
+              }
+            : application,
+        ),
+      );
+      setError("");
+    } catch (requestError) {
+      setError(
+        requestError.response?.data?.message ||
+          "Failed to shortlist application.",
+      );
     }
   }
   return (
@@ -102,12 +125,33 @@ export default function EligibilityCheck() {
                   <StatusBadge status={a.status} />
                 </td>
                 <td className="text-right">
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => check(a._id)}
-                  >
-                    Run check
-                  </button>
+                  <div className="flex justify-end gap-2">
+                    {a.status === "submitted" && (
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => check(a._id)}
+                      >
+                        Run check
+                      </button>
+                    )}
+                    {a.status === "eligible" && user.role === "government" && (
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => shortlist(a._id)}
+                      >
+                        Shortlist
+                      </button>
+                    )}
+                    {a.status === "shortlisted" &&
+                      user.role === "government" && (
+                        <Link
+                          className="btn btn-primary"
+                          to={`/applications/${a._id}/pilot/new`}
+                        >
+                          Create Pilot
+                        </Link>
+                      )}
+                  </div>
                 </td>
               </tr>
             ))}

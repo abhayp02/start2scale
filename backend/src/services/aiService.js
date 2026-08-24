@@ -7,6 +7,7 @@ const askLLM = async (prompt) => {
       `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(process.env.GEMINI_API_KEY)}`,
       {
         method: "POST",
+        signal: AbortSignal.timeout(20000),
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [

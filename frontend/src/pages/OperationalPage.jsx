@@ -94,7 +94,7 @@ export default function OperationalPage({ title }) {
     <main className="page">
       <header className="page-head">
         <div>
-          <p className="eyebrow">Scale2Start workspace</p>
+          <p className="eyebrow">Start2Scale workspace</p>
           <h1 className="page-title">{title}</h1>
           <p className="subtitle">
             Secure, traceable operations across the innovation procurement

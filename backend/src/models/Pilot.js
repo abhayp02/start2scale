@@ -20,4 +20,7 @@ const schema = new mongoose.Schema({
   startDate: Date,
   endDate: Date,
 });
+
+schema.index({ challengeId: 1, startupId: 1 }, { unique: true });
+
 export default mongoose.model("Pilot", schema);

@@ -39,7 +39,7 @@ export default function Login({ portal = "government" }) {
         <div>
           <div className="brand !p-0">
             <span className="brand-mark">S2</span>
-            <b className="brand-name">Scale2Start</b>
+            <b className="brand-name">Start2Scale</b>
           </div>
           <p className="eyebrow !mt-16 !text-[#90b4ff]">
             {portal === "startup"

@@ -33,7 +33,23 @@ export async function createChallenge(req, res) {
         .json({ message: `Missing required field(s): ${missing.join(", ")}` });
 
     const problemText = applyTemplate(template.content, req.body);
-    const requirements = await extractRequirements(problemText);
+    let requirements;
+    let aiWarning;
+
+    try {
+      requirements = await extractRequirements(problemText);
+    } catch (error) {
+      requirements = {
+        technology: req.body.technicalRequirements || req.body.technology || "",
+        domain: req.body.sector,
+        requiredAccuracy:
+          req.body.performanceRequirements || req.body.requiredAccuracy || "",
+        deployment:
+          req.body.integrationRequirements || req.body.deployment || "",
+      };
+      aiWarning =
+        "AI requirement extraction is temporarily unavailable. Structured form values were saved and can be analyzed again later.";
+    }
     const challenge = await Challenge.create({
       createdBy: req.user._id,
       departmentName: req.body.departmentName,
@@ -43,7 +59,7 @@ export async function createChallenge(req, res) {
       status: "draft",
     });
 
-    return res.status(201).json({ challenge });
+    return res.status(201).json({ challenge, aiWarning });
   } catch (error) {
     return res
       .status(502)

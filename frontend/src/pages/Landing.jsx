@@ -14,7 +14,7 @@ export default function Landing() {
       <nav className="public-nav">
         <Link to="/welcome" className="brand !p-0 no-underline text-[#0b1f3a]">
           <span className="brand-mark text-white">S2</span>
-          <b className="brand-name">Scale2Start</b>
+          <b className="brand-name">Start2Scale</b>
         </Link>
         <div className="flex gap-3">
           <Link className="btn btn-secondary" to="/government/login">

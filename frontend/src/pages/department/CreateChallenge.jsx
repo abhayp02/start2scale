@@ -87,7 +87,11 @@ export default function CreateChallenge() {
       await api.patch(`/challenges/${r.data.challenge._id}/status`, {
         status: "published",
       });
-      setMessage(`Challenge published successfully: ${r.data.challenge._id}`);
+      setMessage(
+        r.data.aiWarning
+          ? `Challenge published. ${r.data.aiWarning}`
+          : `Challenge published successfully: ${r.data.challenge._id}`,
+      );
       setForm({});
       setStep(0);
     } catch (e) {

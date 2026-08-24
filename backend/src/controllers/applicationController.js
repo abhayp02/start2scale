@@ -35,6 +35,36 @@ export async function myApplications(req, res) {
   }
 }
 
+export async function getApplication(req, res) {
+  try {
+    const application = await Application.findById(req.params.id)
+      .populate("challengeId")
+      .populate("startupId", "name email startupProfile");
+
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    const ownsChallenge =
+      application.challengeId.createdBy.toString() === req.user._id.toString();
+    const ownsApplication =
+      application.startupId._id.toString() === req.user._id.toString();
+
+    if (
+      req.user.role !== "admin" &&
+      req.user.role !== "evaluator" &&
+      !ownsChallenge &&
+      !ownsApplication
+    ) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    return res.json({ application });
+  } catch (error) {
+    return res.status(400).json({ message: "Invalid application ID" });
+  }
+}
+
 export async function challengeApplications(req, res) {
   try {
     const challenge = await Challenge.findOne({

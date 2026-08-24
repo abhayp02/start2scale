@@ -51,7 +51,7 @@ export default function AppShell() {
         <div className="brand">
           <span className="brand-mark">S2</span>
           <span>
-            <b className="brand-name block">Scale2Start</b>
+            <b className="brand-name block">Start2Scale</b>
             <small className="text-[#9fb0c8]">Innovation Procurement</small>
           </span>
         </div>

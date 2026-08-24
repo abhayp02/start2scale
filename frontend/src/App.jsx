@@ -19,6 +19,7 @@ import KPIUpdate from "./pages/pilots/KPIUpdate.jsx";
 import MilestoneTracker from "./pages/pilots/MilestoneTracker.jsx";
 import PilotDetail from "./pages/pilots/PilotDetail.jsx";
 import PilotList from "./pages/pilots/PilotList.jsx";
+import CreatePilot from "./pages/pilots/CreatePilot.jsx";
 import Apply from "./pages/startup/Apply.jsx";
 import BrowseChallenges from "./pages/startup/BrowseChallenges.jsx";
 import MyApplications from "./pages/startup/MyApplications.jsx";
@@ -111,6 +112,10 @@ export default function App() {
                   element={<MyChallenges />}
                 />
                 <Route path="/payments" element={<PaymentsDue />} />
+                <Route
+                  path="/applications/:applicationId/pilot/new"
+                  element={<CreatePilot />}
+                />
                 <Route
                   path="/contracts/generate"
                   element={<GenerateContract />}
