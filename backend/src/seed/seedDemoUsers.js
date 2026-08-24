@@ -110,6 +110,33 @@ const demoUsers = [
     },
   },
   {
+    name: "Social Welfare Officer",
+    email: "contact@welfare.gov.in",
+    role: "government",
+    departmentName: "Department of Social Welfare",
+    governmentProfile: {
+      organizationType: "State Government Department",
+      ministry: "Social Justice and Empowerment",
+      jurisdiction: "Statewide welfare distribution, disability support and citizen benefit schemes",
+      contactDesignation: "Director, Welfare Programs & Technology",
+      procurementFocus: ["Social Welfare", "Benefit Delivery", "Citizen Reach", "Direct Benefit Transfers"],
+      activePrograms: ["Jan Kalyan Digital Mission", "Direct Benefit Delivery Modernization", "Accessible Services Mission"],
+    },
+  },
+  {
+    name: "Sunita Deshmukh",
+    email: "sunita.evaluator@welfare.gov.in",
+    role: "evaluator",
+    departmentName: "Department of Social Welfare",
+    evaluatorProfile: {
+      expertiseDomains: ["Social Welfare", "Citizen Reach", "Direct Benefit Transfers"],
+      professionalCertifications: ["Social Impact Assessment", "Public Procurement"],
+      yearsOfExperience: 10,
+      currentCapacity: 5,
+      bio: "Social welfare evaluator specializing in benefit delivery pipelines, last-mile access and citizen outcome assessment.",
+    },
+  },
+  {
     name: "Ananya Mehta",
     email: "ananya.evaluator@scale2start.gov.in",
     role: "evaluator",
