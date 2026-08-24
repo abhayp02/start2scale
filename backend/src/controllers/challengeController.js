@@ -159,11 +159,73 @@ export async function getStartupMatches(req, res) {
       .slice(0, 12)
       .map(({ candidate }) => candidate);
     candidateCount = candidatesForAI.length;
-    const matches = await matchStartups(
-      challenge.requirements,
-      candidatesForAI,
-    );
-    return res.json({ matches, analyzedCount, candidateCount });
+    try {
+      const matches = await matchStartups(
+        challenge.requirements,
+        candidatesForAI,
+      );
+      const model = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
+      const generatedAt = new Date();
+
+      challenge.aiMatchAnalysis = {
+        model,
+        generatedAt,
+        requirementsSnapshot: challenge.requirements.toObject(),
+        analyzedCount,
+        candidateCount,
+        matches,
+      };
+      await challenge.save();
+
+      return res.json({
+        matches,
+        analyzedCount,
+        candidateCount,
+        matchingMode: "gemini",
+        model,
+        generatedAt,
+        aiWarning: null,
+      });
+    } catch (aiError) {
+      if (challenge.aiMatchAnalysis?.matches?.length) {
+        return res.json({
+          matches: challenge.aiMatchAnalysis.matches,
+          analyzedCount:
+            challenge.aiMatchAnalysis.analyzedCount || analyzedCount,
+          candidateCount:
+            challenge.aiMatchAnalysis.candidateCount || candidateCount,
+          matchingMode: "cached-gemini",
+          model: challenge.aiMatchAnalysis.model,
+          generatedAt: challenge.aiMatchAnalysis.generatedAt,
+          aiWarning:
+            "Live Gemini is temporarily unavailable. Showing the last successful, timestamped Gemini analysis.",
+        });
+      }
+
+      const fallbackMatches = (
+        relevantCandidates.length ? relevantCandidates : rankedCandidates
+      )
+        .slice(0, 12)
+        .map(({ candidate, fit }) => ({
+          startupId: candidate.startupId,
+          startupName: candidate.startupName,
+          matchScore: fit.score,
+          explanation:
+            fit.reasons.join(". ") ||
+            "Candidate retained for procurement review based on available profile evidence.",
+        }));
+
+      return res.json({
+        matches: fallbackMatches,
+        analyzedCount,
+        candidateCount,
+        matchingMode: "capability-fallback",
+        model: null,
+        generatedAt: null,
+        aiWarning:
+          "Gemini is temporarily unavailable. Transparent capability-based fallback ranking is shown.",
+      });
+    }
   } catch (error) {
     return res
       .status(502)

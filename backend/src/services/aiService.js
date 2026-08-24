@@ -2,7 +2,7 @@ const askLLM = async (prompt) => {
   if (!process.env.GEMINI_API_KEY)
     throw new Error("GEMINI_API_KEY is not configured");
   try {
-    const model = process.env.GEMINI_MODEL || "gemini-3.7-flash";
+    const model = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(process.env.GEMINI_API_KEY)}`,
       {
