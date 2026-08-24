@@ -18,8 +18,8 @@ The AI engine recommends and ranks relevant startups. It does not make the final
 - Backend: Node.js, Express
 - Database: MongoDB Atlas with Mongoose
 - Authentication: JWT and role-based authorization
-- AI: Google Gemini Developer API (`gemini-3.7-flash` by default)
-- Uploads: Multer with local file storage
+- AI: Google Gemini Developer API (`gemini-3.5-flash-lite` by default)
+- Uploads: Multer with MongoDB GridFS durable storage
 
 ## Roles
 
@@ -44,7 +44,8 @@ PORT=5000
 MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>/<database>?retryWrites=true&w=majority
 JWT_SECRET=replace-with-a-long-random-secret
 GEMINI_API_KEY=replace-with-your-google-ai-studio-key
-GEMINI_MODEL=gemini-3.7-flash
+GEMINI_MODEL=gemini-3.5-flash-lite
+FRONTEND_URL=http://localhost:5173
 VITE_API_URL=http://localhost:5000/api
 ```
 
@@ -141,11 +142,110 @@ npm run dev
 
 Open:
 
-- Landing page: <http://localhost:5173/welcome>
+- Landing page: <http://localhost:5173/>
 - Government login: <http://localhost:5173/government/login>
 - Startup login: <http://localhost:5173/startup/login>
 - Admin login: <http://localhost:5173/admin/login>
 - API health check: <http://localhost:5000/api/health>
+
+The health endpoint checks both the Express API and its MongoDB connection.
+The green system indicator in the frontend uses this endpoint, so it reflects
+real backend readiness instead of showing a fixed label.
+
+## Free deployment: Vercel + Render + MongoDB Atlas
+
+This repository is prepared for the following deployment layout:
+
+```text
+Browser → Vercel frontend → Render API → MongoDB Atlas
+                                  └──→ Google Gemini API
+```
+
+Deploy the backend first because the frontend needs its public API URL.
+
+### 1. Deploy the backend on Render
+
+Create a **Web Service** from the repository and use:
+
+```text
+Branch: deployment
+Root Directory: backend
+Runtime: Node
+Build Command: npm install
+Start Command: npm start
+Health Check Path: /api/health
+```
+
+Add these Render environment variables:
+
+```env
+NODE_ENV=production
+MONGODB_URI=<your MongoDB Atlas connection string>
+JWT_SECRET=<a long unique random value>
+GEMINI_API_KEY=<your Google AI Studio key>
+GEMINI_MODEL=gemini-3.5-flash-lite
+GOVERNMENT_EMAIL_DOMAINS=gov.in,nic.in
+DEMO_ADMIN_EMAIL=admin@scale2start.demo
+DEMO_ADMIN_PASSWORD=<your chosen demo password>
+FRONTEND_URL=https://your-project.vercel.app
+```
+
+Render supplies `PORT` automatically. The server listens on that port and on
+`0.0.0.0`, which makes it reachable from Render's public network.
+
+After deployment, verify:
+
+```text
+https://your-render-service.onrender.com/api/health
+```
+
+You should receive `status: "ok"` and `database: "connected"`.
+
+### 2. Deploy the frontend on Vercel
+
+Create a Vercel project from the same repository and use:
+
+```text
+Branch: deployment
+Root Directory: frontend
+Framework Preset: Vite
+Build Command: npm run build
+Output Directory: dist
+```
+
+Add this Vercel environment variable, using the real Render URL:
+
+```env
+VITE_API_URL=https://your-render-service.onrender.com/api
+```
+
+`frontend/vercel.json` sends direct visits such as `/government/login` and
+`/dashboard` to the React application. Without this rewrite, refreshing a
+nested route can produce a Vercel 404.
+
+### 3. Connect the final Vercel URL to Render
+
+Once Vercel gives you the final public URL, set Render's `FRONTEND_URL` to that
+exact origin and redeploy the backend:
+
+```env
+FRONTEND_URL=https://your-project.vercel.app
+```
+
+For more than one allowed frontend, use comma-separated origins. CORS then
+accepts only those websites plus local development URLs.
+
+### Free-tier behavior
+
+Render's free web service can sleep after inactivity. The frontend checks
+`/api/health` when a visitor opens the site and every ten minutes while the
+site remains open. During a cold start it shows **Connecting to system**, then
+changes to **System operational** after the API and database are ready.
+
+This does not create an artificial always-on monitor. For a presentation,
+open the deployed site several minutes before the demo and keep that tab open.
+KPI evidence is stored in MongoDB GridFS, so Render restarts do not delete new
+uploads.
 
 ## Suggested demo flow
 
@@ -175,17 +275,17 @@ Each operation makes one Gemini request and expects structured JSON output. Offi
 - Authentication, challenges, applications, eligibility, evaluation, pilots, milestones, payments, KPI records, uploads, templates and Gemini endpoints are API-backed.
 - AI Solution Matching loads department challenges and calls `/api/challenges/:id/matches` for live Gemini-ranked startup recommendations.
 - Some enterprise navigation views are designed operational showcases pending dedicated backend modules.
-- Uploaded files are stored locally in `uploads/`; production deployment should use durable object storage.
-- No automated test suite or production deployment configuration is included.
+- New KPI evidence uploads are stored durably in MongoDB GridFS. Legacy local
+  `/uploads` paths remain available during local development.
+- Vercel SPA routing and Render-compatible API startup are configured.
 
 ## Production checklist
 
 - Rotate all development credentials.
 - Restrict MongoDB Atlas network access.
 - Use a strong, unique JWT secret.
-- Configure strict CORS origins.
+- Set `FRONTEND_URL` to the exact deployed Vercel origin.
 - Add rate limiting and request validation.
-- Move uploads to durable object storage.
 - Add automated tests, monitoring and centralized error logging.
 - Connect remaining showcase screens to live API data.
 
@@ -195,7 +295,7 @@ Each operation makes one Gemini request and expects structured JSON output. Offi
 start2scale/
 ├── frontend/        React application
 ├── backend/         Express API and MongoDB models
-├── uploads/         Local evidence uploads
+├── uploads/         Legacy local evidence uploads
 ├── .env.example     Environment variable template
 └── README.md
 ```

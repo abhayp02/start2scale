@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import AppShell from "./components/AppShell.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
+import { SystemStatusProvider } from "./context/SystemStatusContext.jsx";
 import Landing from "./pages/Landing.jsx";
 import OperationalPage from "./pages/OperationalPage.jsx";
 import Login from "./pages/auth/Login.jsx";
@@ -44,8 +45,9 @@ function AccountHome() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <Routes>
+      <SystemStatusProvider>
+        <AuthProvider>
+          <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/welcome" element={<Navigate to="/" replace />} />
           <Route path="/explore" element={<BrowseChallenges publicView />} />
@@ -170,8 +172,9 @@ export default function App() {
               </Route>
             </Route>
           </Route>
-        </Routes>
-      </AuthProvider>
+          </Routes>
+        </AuthProvider>
+      </SystemStatusProvider>
     </BrowserRouter>
   );
 }

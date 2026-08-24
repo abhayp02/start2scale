@@ -1,5 +1,12 @@
 import { Link } from "react-router-dom";
 import BrandMark from "../components/BrandMark.jsx";
+import { useSystemStatus } from "../context/SystemStatusContext.jsx";
+
+const statusLabels = {
+  connecting: "Connecting",
+  operational: "System ready",
+  unavailable: "System unavailable",
+};
 const flow = [
   { name: "Challenge", symbol: "◇", detail: "Define the public need" },
   { name: "AI Matching", symbol: "✦", detail: "Discover relevant solutions" },
@@ -10,6 +17,8 @@ const flow = [
   { name: "Scale", symbol: "◎", detail: "Expand proven impact" },
 ];
 export default function Landing() {
+  const { status, checkStatus } = useSystemStatus();
+
   return (
     <div className="hero">
       <nav className="public-nav">
@@ -22,6 +31,14 @@ export default function Landing() {
           <Link to="/explore">Challenges</Link>
         </div>
         <div className="flex gap-3 landing-login-actions">
+          <button
+            className={`landing-system-status ${status}`}
+            onClick={checkStatus}
+            title="Click to recheck API and database availability"
+            type="button"
+          >
+            <i /> {statusLabels[status]}
+          </button>
           <Link className="btn btn-secondary" to="/government/login">
             Government Login
           </Link>

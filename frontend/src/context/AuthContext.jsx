@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { API_BASE_URL } from "../services/api.js";
 
 const AuthContext = createContext(null);
-const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() =>
@@ -38,7 +38,7 @@ export function AuthProvider({ children }) {
   }
 
   async function authRequest(path, body, saveWhenAuthenticated = true) {
-    const response = await fetch(`${apiUrl}/auth/${path}`, {
+    const response = await fetch(`${API_BASE_URL}/auth/${path}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -59,7 +59,7 @@ export function AuthProvider({ children }) {
       return;
     }
 
-    fetch(`${apiUrl}/auth/me`, {
+    fetch(`${API_BASE_URL}/auth/me`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(async (response) => {

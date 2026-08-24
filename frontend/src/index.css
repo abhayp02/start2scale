@@ -2816,6 +2816,44 @@ textarea.form-input {
   border-color: #c7d7fe;
 }
 
+.badge.danger {
+  border-color: #fecdca;
+  color: #b42318;
+}
+
+.system-status {
+  cursor: pointer;
+  font: inherit;
+}
+
+.landing-system-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  background: transparent;
+  color: #667085;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.landing-system-status i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f79009;
+}
+
+.landing-system-status.operational i {
+  background: #12b76a;
+}
+
+.landing-system-status.unavailable i {
+  background: #d92d20;
+}
+
 .ai-panel {
   position: relative;
   overflow: hidden;

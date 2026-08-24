@@ -1,6 +1,13 @@
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import { useSystemStatus } from "../context/SystemStatusContext.jsx";
 import BrandMark from "./BrandMark.jsx";
+
+const systemStatusDisplay = {
+  connecting: { className: "warning", label: "Connecting to system" },
+  operational: { className: "success", label: "System operational" },
+  unavailable: { className: "danger", label: "System unavailable" },
+};
 const gov = [
   ["Overview", "/dashboard"],
   ["Challenges", "/department/challenges"],
@@ -86,7 +93,9 @@ const navSymbols = {
 
 export default function AppShell() {
   const { user, logout } = useAuth();
+  const { status, checkStatus } = useSystemStatus();
   const location = useLocation();
+  const statusDisplay = systemStatusDisplay[status];
   const items =
     user.role === "admin"
       ? admin
@@ -153,7 +162,14 @@ export default function AppShell() {
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="badge success">● System operational</span>
+            <button
+              className={`badge system-status ${statusDisplay.className}`}
+              onClick={checkStatus}
+              title="Click to recheck API and database availability"
+              type="button"
+            >
+              ● {statusDisplay.label}
+            </button>
             <span className="role-chip">{user.role}</span>
             <NavLink to="/notifications" aria-label="Notifications">
               ♢
