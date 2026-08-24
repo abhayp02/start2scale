@@ -174,7 +174,9 @@ export default function Register() {
   }
 
   return (
-    <main className={`auth-page auth-${startupPortal ? "startup" : "government"}`}>
+    <main
+      className={`auth-page illustrated-auth-page registration-page auth-${startupPortal ? "startup" : "government"}`}
+    >
       <section className="auth-brand">
         <div>
           <div className="brand !p-0">

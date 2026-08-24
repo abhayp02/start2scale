@@ -39,7 +39,7 @@ export default function Login({ portal = "government" }) {
   }
 
   return (
-    <main className={`auth-page login-page auth-${portal}`}>
+    <main className={`auth-page illustrated-auth-page auth-${portal}`}>
       <section className="auth-brand">
         <div>
           <div className="brand !p-0">

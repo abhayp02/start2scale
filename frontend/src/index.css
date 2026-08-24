@@ -964,10 +964,49 @@ a {
   background: linear-gradient(145deg, #101828, #263b60);
 }
 .admin-login-page {
-  background: radial-gradient(circle at 15% 20%, rgba(21, 94, 239, 0.13), transparent 26%), radial-gradient(circle at 85% 80%, rgba(255, 153, 51, 0.09), transparent 25%), linear-gradient(145deg, #f8fafc, #eef4ff);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 14% 18%, rgba(21, 94, 239, 0.2), transparent 31%),
+    radial-gradient(circle at 88% 82%, rgba(11, 31, 58, 0.16), transparent 34%),
+    linear-gradient(145deg, #f8fafc 0%, #eef4ff 52%, #e9effa 100%);
+}
+.admin-login-page::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: min(76vw, 760px);
+  height: 88vh;
+  background: url("/assets/admin-auth-watermark.png") center / contain no-repeat;
+  opacity: 0.13;
 }
 .admin-login-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   border-top: 4px solid #101828;
+  background: rgba(255, 255, 255, 0.76);
+  backdrop-filter: blur(10px);
+}
+.admin-login-card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 74px 28px 28px;
+  background: url("/assets/admin-auth-watermark.png") center / contain no-repeat;
+  opacity: 0.15;
+}
+.admin-login-card > * {
+  position: relative;
+  z-index: 1;
+}
+.admin-login-card .form-input {
+  background: rgba(255, 255, 255, 0.95);
+}
+.admin-login-card .form-input:focus {
+  outline: 3px solid rgba(21, 94, 239, 0.13);
+  border-color: #155eef;
 }
 .dashboard-page > .page-head {
   position: relative;
@@ -987,82 +1026,131 @@ a {
   background: repeating-linear-gradient(135deg, transparent 0 12px, var(--role-accent) 12px 13px);
 }
 
-/* Minimal role artwork for authentication forms */
-.login-page .auth-form-wrap {
+/* Role artwork shared by login and registration forms */
+.illustrated-auth-page .auth-form-wrap {
   position: relative;
   isolation: isolate;
   overflow: hidden;
   background: linear-gradient(145deg, #f8fafc, #f1f5fb);
 }
-.login-page .auth-form-wrap::before {
+.illustrated-auth-page .auth-form-wrap::before {
   content: "";
   position: absolute;
   z-index: -2;
-  width: min(74%, 560px);
-  height: 78%;
-  right: -5%;
-  bottom: -7%;
+  width: min(88%, 640px);
+  height: 92%;
+  right: 50%;
+  bottom: 2%;
+  transform: translateX(50%);
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  opacity: 0.09;
+  opacity: 0.16;
   filter: saturate(0.7);
 }
-.login-page .auth-form-wrap::after {
+.illustrated-auth-page .auth-form-wrap::after {
   content: "";
   position: absolute;
   z-index: -1;
   inset: 0;
   pointer-events: none;
 }
-.login-page.auth-government .auth-form-wrap::before {
+.illustrated-auth-page.auth-government .auth-form-wrap::before {
   background-image: url("/assets/government-auth-watermark.png");
-  opacity: 0.075;
+  background-size: auto 92%;
+  opacity: 0.18;
 }
-.login-page.auth-government .auth-form-wrap::after {
+.illustrated-auth-page.auth-government .auth-form-wrap {
   background:
-    radial-gradient(circle at 8% 12%, rgba(255, 153, 51, 0.1), transparent 24%),
-    radial-gradient(circle at 94% 88%, rgba(19, 136, 8, 0.07), transparent 24%);
+    linear-gradient(145deg, #fffaf4 0%, #f8fafc 44%, #f3faf3 100%),
+    #f8fafc;
 }
-.login-page.auth-startup .auth-form-wrap::before {
-  width: min(82%, 610px);
-  right: -8%;
+.illustrated-auth-page.auth-government .auth-form-wrap::after {
+  background:
+    radial-gradient(circle at 12% 14%, rgba(255, 153, 51, 0.18), transparent 31%),
+    radial-gradient(circle at 86% 84%, rgba(19, 136, 8, 0.13), transparent 34%),
+    linear-gradient(120deg, rgba(255, 255, 255, 0.18), rgba(21, 94, 239, 0.035));
+}
+.illustrated-auth-page.auth-startup .auth-form-wrap::before {
+  width: min(92%, 680px);
+  right: 50%;
   background-image: url("/assets/startup-auth-watermark.png");
-  opacity: 0.11;
+  background-size: auto 100%;
+  opacity: 0.22;
 }
-.login-page.auth-startup .auth-form-wrap::after {
+.illustrated-auth-page.auth-startup .auth-form-wrap {
   background:
-    radial-gradient(circle at 8% 12%, rgba(21, 94, 239, 0.09), transparent 25%),
-    radial-gradient(circle at 92% 88%, rgba(15, 159, 145, 0.1), transparent 26%);
+    linear-gradient(145deg, #f4f8ff 0%, #f5fbfb 48%, #eefbf8 100%),
+    #f8fafc;
 }
-.login-page .auth-form {
+.illustrated-auth-page.auth-startup .auth-form-wrap::after {
+  background:
+    radial-gradient(circle at 10% 12%, rgba(21, 94, 239, 0.17), transparent 32%),
+    radial-gradient(circle at 88% 84%, rgba(15, 159, 145, 0.2), transparent 36%),
+    linear-gradient(125deg, rgba(255, 255, 255, 0.16), rgba(15, 159, 145, 0.045));
+}
+.illustrated-auth-page .auth-form {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   padding: 30px;
   border: 1px solid rgba(208, 213, 221, 0.82);
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.84);
+  background: rgba(255, 255, 255, 0.7);
   box-shadow: 0 18px 44px rgba(11, 31, 58, 0.09);
   backdrop-filter: blur(9px);
 }
-.login-page.auth-government .auth-form {
+.illustrated-auth-page .auth-form::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 74px 18px 14px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.14;
+  pointer-events: none;
+}
+.illustrated-auth-page.auth-government .auth-form::before {
+  background-image: url("/assets/government-auth-watermark.png");
+  opacity: 0.17;
+}
+.illustrated-auth-page.auth-startup .auth-form::before {
+  background-image: url("/assets/startup-auth-watermark.png");
+  opacity: 0.22;
+}
+.illustrated-auth-page .auth-form > * {
+  position: relative;
+  z-index: 1;
+}
+.illustrated-auth-page.auth-government .auth-form {
   border-top: 3px solid #ff9933;
   box-shadow:
     0 18px 44px rgba(11, 31, 58, 0.09),
     inset 0 -2px rgba(19, 136, 8, 0.45);
 }
-.login-page.auth-startup .auth-form {
+.illustrated-auth-page.auth-startup .auth-form {
   border-top: 3px solid #0f9f91;
 }
-.login-page .form-input {
-  background: rgba(255, 255, 255, 0.78);
+.illustrated-auth-page .form-input {
+  background: rgba(255, 255, 255, 0.94);
   box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
 }
-.login-page .form-input:focus {
+.illustrated-auth-page .form-input:focus {
   outline: 3px solid rgba(21, 94, 239, 0.12);
   border-color: #155eef;
 }
-.login-page.auth-startup .form-input:focus {
+.illustrated-auth-page.auth-startup .form-input:focus {
   outline-color: rgba(15, 159, 145, 0.14);
   border-color: #0f9f91;
+}
+.registration-page .auth-brand {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+.registration-page .auth-form-wrap {
+  min-height: 100vh;
 }
 .role-government .dashboard-page > .page-head {
   border-left: 4px solid #ff9933;
