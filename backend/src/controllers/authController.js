@@ -285,3 +285,73 @@ export function adminLogin(req, res) {
 export async function getCurrentUser(req, res) {
   return res.status(200).json({ user: publicUser(req.user) });
 }
+
+export async function updateStartupProfile(req, res) {
+  try {
+    if (req.user.role !== "startup") {
+      return res.status(403).json({ message: "Startup access required" });
+    }
+
+    const profile = req.body.startupProfile || {};
+    const requiredText = ["domain", "productDescription", "deploymentType"];
+    if (requiredText.some((field) => !String(profile[field] || "").trim())) {
+      return res.status(400).json({
+        message: "Domain, product description, and deployment type are required",
+      });
+    }
+    if (!Array.isArray(profile.technology) || !profile.technology.length) {
+      return res.status(400).json({ message: "Add at least one technology" });
+    }
+    if (!["idea-only", "prototype", "deployed"].includes(profile.prototypeStage)) {
+      return res.status(400).json({ message: "Select a valid prototype stage" });
+    }
+
+    const arrayFields = [
+      "technology",
+      "capabilityTags",
+      "industriesServed",
+      "certifications",
+      "previousDeployments",
+      "governmentProjects",
+      "impactMetrics",
+      "integrationCapabilities",
+      "securityCompliance",
+      "geographicAvailability",
+    ];
+    const cleanProfile = { ...profile, profileStatus: "active" };
+    for (const field of arrayFields) {
+      cleanProfile[field] = [...new Set(
+        (Array.isArray(profile[field]) ? profile[field] : [])
+          .map((value) => String(value).trim())
+          .filter(Boolean),
+      )];
+    }
+
+    cleanProfile.teamSize = Number(profile.teamSize) || 0;
+    cleanProfile.pilotBudgetMin = Number(profile.pilotBudgetMin) || 0;
+    cleanProfile.pilotBudgetMax = Number(profile.pilotBudgetMax) || 0;
+    cleanProfile.implementationWeeks = Number(profile.implementationWeeks) || 0;
+    if (cleanProfile.pilotBudgetMax < cleanProfile.pilotBudgetMin) {
+      return res.status(400).json({
+        message: "Maximum pilot budget cannot be lower than minimum pilot budget",
+      });
+    }
+
+    req.user.startupProfile = cleanProfile;
+    await req.user.save();
+    await recordAudit("STARTUP_PROFILE_UPDATED", req.user._id, {
+      domain: cleanProfile.domain,
+      capabilities: cleanProfile.capabilityTags.length,
+    });
+
+    return res.json({
+      message: "Company profile updated",
+      user: publicUser(req.user),
+    });
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      return res.status(400).json({ message: error.message });
+    }
+    return res.status(500).json({ message: "Unable to update company profile" });
+  }
+}

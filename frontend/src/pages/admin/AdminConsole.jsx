@@ -127,23 +127,23 @@ export default function AdminConsole({ view = "overview" }) {
 
 function AdminOverview({ data }) {
   const metrics = [
-    ["Total users", data.metrics.totalUsers],
-    ["Government users", data.metrics.governmentUsers],
-    ["Registered startups", data.metrics.startups],
-    ["Evaluators", data.metrics.evaluators],
-    ["Challenges", data.metrics.challenges],
-    ["Applications", data.metrics.applications],
-    ["Pilots", data.metrics.pilots],
+    ["Total users", data.metrics.totalUsers, "♙", "Identity registry"],
+    ["Government users", data.metrics.governmentUsers, "◆", "Verified institutions"],
+    ["Registered startups", data.metrics.startups, "△", "Solution network"],
+    ["Evaluators", data.metrics.evaluators, "✓", "Review capacity"],
+    ["Challenges", data.metrics.challenges, "◇", "Innovation demand"],
+    ["Applications", data.metrics.applications, "▤", "Active submissions"],
+    ["Pilots", data.metrics.pilots, "◉", "Field validation"],
   ];
   return (
-    <main className="page dashboard-page">
+    <main className="page dashboard-page admin-dashboard">
       <header className="page-head">
         <div><p className="eyebrow">Platform control centre</p><h1 className="page-title">Administration overview</h1><p className="subtitle">Monitor access, integrity and operational health across Start2Scale.</p></div>
-        <span className="badge success">● All core services operational</span>
+        <div className="admin-status-stack"><span>PLATFORM STATUS</span><b><i /> Operational</b><small>Access controls and audit recording active</small></div>
       </header>
-      <div className="metrics">{metrics.map(([label, value]) => <div className="metric" key={label}><div className="metric-label">{label}</div><div className="metric-value">{value}</div><div className="delta">Live platform record</div></div>)}</div>
+      <div className="admin-metric-grid">{metrics.map(([label, value, symbol, context], index) => <div className="admin-stat" key={label}><span className="admin-stat-index">0{index + 1}</span><span className="admin-stat-symbol">{symbol}</span><div><div className="metric-label">{label}</div><div className="metric-value">{value}</div><div className="delta">{context}</div></div></div>)}</div>
       <div className="grid2">
-        <section className="card"><div className="card-title">Recent security and platform activity</div>{data.recentActivity.map((log) => <div className="activity" key={log._id}><span className="dot" /><div><b>{log.action.replaceAll("_", " ")}</b><p className="text-[#667085]">{log.userId?.name || log.details?.email || "System"} · {new Date(log.timestamp).toLocaleString()}</p></div></div>)}{!data.recentActivity.length && <EmptyPanel>No audit events yet.</EmptyPanel>}</section>
+        <section className="card admin-activity-panel"><div className="card-title">Recent security and platform activity</div><p className="admin-section-note">Newest auditable events across the platform</p>{data.recentActivity.map((log) => <div className="activity" key={log._id}><span className="dot" /><div><b>{log.action.replaceAll("_", " ")}</b><p className="text-[#667085]">{log.userId?.name || log.details?.email || "System"} · {new Date(log.timestamp).toLocaleString()}</p></div></div>)}{!data.recentActivity.length && <EmptyPanel>No audit events yet.</EmptyPanel>}</section>
         <section className="admin-health-card"><p className="eyebrow !text-[#90b4ff]">Governance controls</p><h2>Platform integrity at a glance</h2><div className="health-line"><span>Government domain verification</span><b>Enabled</b></div><div className="health-line"><span>Startup anti-spam controls</span><b>4 active</b></div><div className="health-line"><span>Immutable audit recording</span><b>Enabled</b></div><div className="health-line"><span>Admin self-registration</span><b>Blocked</b></div></section>
       </div>
     </main>

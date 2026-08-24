@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import BrandMark from "../components/BrandMark.jsx";
 const flow = [
-  "Challenge",
-  "AI Matching",
-  "Evaluation",
-  "Pilot",
-  "Impact",
-  "Procurement",
-  "Scale",
+  { name: "Challenge", symbol: "◇", detail: "Define the public need" },
+  { name: "AI Matching", symbol: "✦", detail: "Discover relevant solutions" },
+  { name: "Evaluation", symbol: "✓", detail: "Review evidence and fit" },
+  { name: "Pilot", symbol: "◉", detail: "Validate in the field" },
+  { name: "Impact", symbol: "↗", detail: "Measure public outcomes" },
+  { name: "Procurement", symbol: "▣", detail: "Formalize the solution" },
+  { name: "Scale", symbol: "◎", detail: "Expand proven impact" },
 ];
 export default function Landing() {
   return (
@@ -17,7 +17,11 @@ export default function Landing() {
           <BrandMark />
           <b className="brand-name">Start2Scale</b>
         </Link>
-        <div className="flex gap-3">
+        <div className="landing-nav-links">
+          <a href="#how-it-works">How it works</a>
+          <Link to="/explore">Challenges</Link>
+        </div>
+        <div className="flex gap-3 landing-login-actions">
           <Link className="btn btn-secondary" to="/government/login">
             Government Login
           </Link>
@@ -55,24 +59,54 @@ export default function Landing() {
             <span><b>Human-led</b> decisions</span>
             <span><b>Auditable</b> lifecycle</span>
           </div>
+          <div className="hero-proof-grid">
+            <div><b>110+</b><span>solution profiles</span></div>
+            <div><b>7</b><span>connected stages</span></div>
+            <div><b>100%</b><span>human decision authority</span></div>
+          </div>
         </div>
         <div className="hero-visual" role="img" aria-label="Government innovation connected to startup solutions">
           <div className="hero-float-card match-float"><small>TOP AI MATCH</small><b>92%</b><span>High confidence</span></div>
           <div className="hero-float-card impact-float"><small>PUBLIC IMPACT</small><b>2.4M</b><span>Projected citizens</span></div>
         </div>
-        <section className="card">
-          <p className="eyebrow text-center">
-            One connected innovation lifecycle
-          </p>
-          <div className="lifecycle">
-            {flow.map((x, i) => (
-              <div
-                className={`life ${i < 2 ? "done" : ""} ${i === 2 ? "active" : ""}`}
-                key={x}
-              >
-                <div className="life-dot">{i < 2 ? "✓" : i + 1}</div>
-                {x}
+        <section className="card lifecycle-overview" id="how-it-works">
+          <div className="lifecycle-heading">
+            <p className="eyebrow">One connected innovation lifecycle</p>
+            <p>
+              Every government challenge moves through seven connected stages.
+            </p>
+          </div>
+          <div className="lifecycle lifecycle-informational">
+            {flow.map((stage, i) => (
+              <div className="life" key={stage.name}>
+                <span className="stage-number">0{i + 1}</span>
+                <div className="life-dot">{stage.symbol}</div>
+                <span className="stage-name">{stage.name}</span>
+                <small>{stage.detail}</small>
+                {i < flow.length - 1 && (
+                  <span className="life-connector" aria-hidden="true">→</span>
+                )}
               </div>
+            ))}
+          </div>
+          <p className="lifecycle-note">
+            AI assists discovery and analysis; authorized officials retain every decision.
+          </p>
+        </section>
+        <section className="landing-principles">
+          <div className="landing-section-heading">
+            <span className="landing-section-label">BUILT FOR PUBLIC INNOVATION</span>
+            <h2>Automation with accountability</h2>
+            <p>One platform connects discovery, evaluation and measurable public impact without replacing institutional judgment.</p>
+          </div>
+          <div className="principle-grid">
+            {[
+              ["✦", "Explainable discovery", "Every recommendation includes matching evidence, strengths and potential gaps."],
+              ["✓", "Human-led decisions", "Eligibility, scoring, shortlisting and procurement remain with authorized officials."],
+              ["◷", "End-to-end auditability", "Important actions are recorded throughout challenge, pilot and scale-up workflows."],
+              ["↗", "Outcome-led procurement", "Pilot milestones and multi-source KPIs connect spending with demonstrated impact."],
+            ].map(([symbol, title, copy], index) => (
+              <article className="principle-card" key={title}><span>{symbol}</span><small>0{index + 1}</small><h3>{title}</h3><p>{copy}</p></article>
             ))}
           </div>
         </section>
